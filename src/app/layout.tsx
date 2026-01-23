@@ -1,4 +1,5 @@
 import '@mantine/core/styles.css';
+import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
 import type { Metadata } from 'next';
 import { ColorSchemeScript } from '@mantine/core';

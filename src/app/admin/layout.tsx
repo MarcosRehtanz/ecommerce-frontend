@@ -12,6 +12,7 @@ import {
 import {
   IconDashboard,
   IconPackage,
+  IconCategory,
   IconUsers,
   IconShoppingCart,
   IconArrowLeft,
@@ -24,6 +25,7 @@ import { AuthGuard } from '@/components/auth/AuthGuard';
 const navItems = [
   { label: 'Dashboard', icon: IconDashboard, href: '/admin' },
   { label: 'Productos', icon: IconPackage, href: '/admin/products' },
+  { label: 'Categorías', icon: IconCategory, href: '/admin/categories' },
   { label: 'Pedidos', icon: IconShoppingCart, href: '/admin/orders' },
   { label: 'Usuarios', icon: IconUsers, href: '/admin/users' },
 ];

@@ -7,6 +7,8 @@ export interface CreateProductDto {
   price: number;
   stock: number;
   imageUrl?: string;
+  imageData?: string;
+  categoryId?: string | null;
 }
 
 export interface UpdateProductDto {
@@ -15,7 +17,9 @@ export interface UpdateProductDto {
   price?: number;
   stock?: number;
   imageUrl?: string;
+  imageData?: string | null;
   isActive?: boolean;
+  categoryId?: string | null;
 }
 
 export interface ProductsQueryParams extends PaginationParams {
@@ -23,6 +27,8 @@ export interface ProductsQueryParams extends PaginationParams {
   maxPrice?: number;
   inStock?: boolean;
   isActive?: boolean;
+  categoryId?: string;
+  category?: string; // slug
 }
 
 export const productsApi = {

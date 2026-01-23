@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import {
   Container,
   Title,
@@ -22,22 +23,30 @@ import {
 import { IconSearch, IconShoppingCart } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useProducts } from '@/hooks/useProducts';
+import { useCategories } from '@/hooks/useCategories';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { Product } from '@/types';
 import { getProductImageSrc } from '@/utils/image';
 
 export default function ProductsPage() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get('category');
+
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState('');
+  const [category, setCategory] = useState<string | null>(categoryParam);
   const [sortBy, setSortBy] = useState<string | null>('createdAt');
   const [sortOrder, setSortOrder] = useState<string | null>('desc');
   const [minPrice, setMinPrice] = useState<number | ''>('');
   const [maxPrice, setMaxPrice] = useState<number | ''>('');
 
+  const { data: categoriesData } = useCategories();
+
   const { data, isLoading } = useProducts({
     page,
     limit: 12,
     search: search || undefined,
+    category: category || undefined,
     sortBy: sortBy || 'createdAt',
     sortOrder: (sortOrder as 'asc' | 'desc') || 'desc',
     minPrice: minPrice !== '' ? minPrice : undefined,
@@ -96,6 +105,18 @@ export default function ProductsPage() {
                 setPage(1);
               }}
               style={{ width: 120 }}
+            />
+            <Select
+              label="Categoría"
+              placeholder="Todas"
+              value={category}
+              onChange={(value) => {
+                setCategory(value);
+                setPage(1);
+              }}
+              data={categoriesData?.map((c) => ({ value: c.slug, label: c.name })) || []}
+              clearable
+              style={{ width: 160 }}
             />
             <Select
               label="Ordenar por"

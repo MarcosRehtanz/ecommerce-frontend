@@ -10,11 +10,47 @@ import {
   Stack,
   Grid,
   Paper,
+  Skeleton,
 } from '@mantine/core';
 import Link from 'next/link';
 import { IconArrowRight, IconFlame } from '@tabler/icons-react';
+import { useHomepageConfig } from '@/hooks/useSiteConfig';
+
+// Default values
+const defaults = {
+  title: 'Hasta 40% de descuento en productos seleccionados',
+  subtitle: 'OFERTA ESPECIAL',
+  description: 'Aprovecha nuestra oferta de temporada. Stock limitado, ¡no te lo pierdas!',
+  buttonText: 'Ver Ofertas',
+  buttonLink: '/products?onSale=true',
+};
 
 export function SpecialOffer() {
+  const { data: config, isLoading } = useHomepageConfig();
+  const offerConfig = config?.['special-offer'];
+
+  // Use config values or defaults
+  const title = offerConfig?.title || defaults.title;
+  const subtitle = offerConfig?.subtitle || defaults.subtitle;
+  const description = offerConfig?.description || defaults.description;
+  const buttonText = offerConfig?.buttonText || defaults.buttonText;
+  const buttonLink = offerConfig?.buttonLink || defaults.buttonLink;
+
+  // Don't render if explicitly set to not visible
+  if (offerConfig && !offerConfig.isVisible) {
+    return null;
+  }
+
+  if (isLoading) {
+    return (
+      <Box py="xl">
+        <Container size="xl">
+          <Skeleton height={200} radius="lg" />
+        </Container>
+      </Box>
+    );
+  }
+
   return (
     <Box py="xl">
       <Container size="xl">
@@ -57,29 +93,29 @@ export function SpecialOffer() {
                 <Group gap="xs">
                   <IconFlame size={28} color="white" />
                   <Text c="white" fw={600} size="lg">
-                    OFERTA ESPECIAL
+                    {subtitle}
                   </Text>
                 </Group>
 
                 <Title order={2} c="white" fz={{ base: 28, md: 36 }}>
-                  Hasta 40% de descuento en productos seleccionados
+                  {title}
                 </Title>
 
                 <Text c="white" opacity={0.9} size="lg">
-                  Aprovecha nuestra oferta de temporada. Stock limitado, ¡no te lo pierdas!
+                  {description}
                 </Text>
 
                 <Group mt="md">
                   <Button
                     component={Link}
-                    href="/products?onSale=true"
+                    href={buttonLink}
                     size="lg"
                     radius="md"
                     color="white"
                     c="violet"
                     rightSection={<IconArrowRight size={18} />}
                   >
-                    Ver Ofertas
+                    {buttonText}
                   </Button>
                 </Group>
               </Stack>
@@ -87,7 +123,6 @@ export function SpecialOffer() {
 
             <Grid.Col span={{ base: 12, md: 5 }}>
               <Box ta="center">
-                {/* Countdown or promo image could go here */}
                 <Text c="white" fz={72} fw={900} lh={1}>
                   -40%
                 </Text>

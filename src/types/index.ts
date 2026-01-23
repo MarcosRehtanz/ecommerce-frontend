@@ -8,6 +8,23 @@ export interface User {
   updatedAt: string;
 }
 
+// Category types
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  imageUrl?: string;
+  imageData?: string;
+  displayOrder: number;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+  _count?: {
+    products: number;
+  };
+}
+
 // Product types
 export interface Product {
   id: string;
@@ -18,6 +35,12 @@ export interface Product {
   imageUrl?: string;
   imageData?: string;
   isActive: boolean;
+  categoryId?: string;
+  category?: {
+    id: string;
+    name: string;
+    slug: string;
+  };
   createdAt: string;
   updatedAt: string;
 }
@@ -100,4 +123,57 @@ export interface ApiError {
   message: string;
   statusCode: number;
   error?: string;
+}
+
+// Site Configuration types
+export interface SiteConfig {
+  id: string;
+  key: string;
+  value: any;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TopBarConfig {
+  message: string;
+  isVisible: boolean;
+  backgroundColor?: string;
+  textColor?: string;
+}
+
+export interface HeroConfig {
+  title: string;
+  subtitle: string;
+  primaryButtonText: string;
+  primaryButtonLink: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
+  backgroundImage?: string;
+  isVisible: boolean;
+}
+
+export interface SpecialOfferConfig {
+  title: string;
+  subtitle: string;
+  description: string;
+  buttonText: string;
+  buttonLink: string;
+  endDate?: string;
+  isVisible: boolean;
+  backgroundColor?: string;
+}
+
+export interface HomepageConfig {
+  topbar?: TopBarConfig;
+  hero?: HeroConfig;
+  'special-offer'?: SpecialOfferConfig;
+}
+
+// Newsletter types
+export interface NewsletterSubscription {
+  id: string;
+  email: string;
+  isActive: boolean;
+  subscribedAt: string;
 }

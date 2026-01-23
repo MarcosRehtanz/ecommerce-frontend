@@ -47,7 +47,7 @@ function ProductCard({ product }: { product: Product }) {
     : 0;
 
   return (
-    <Card shadow="sm" padding="sm" radius="md" withBorder h="100%">
+    <Card shadow="sm" padding="sm" radius="md" withBorder h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
       <Card.Section pos="relative">
         <Image
           src={getProductImageSrc(product.imageData, product.imageUrl, 'https://placehold.co/300x300?text=Producto')}
@@ -78,13 +78,13 @@ function ProductCard({ product }: { product: Product }) {
         </ActionIcon>
       </Card.Section>
 
-      <Box mt="md">
+      <Box mt="md" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
         <Text
           component={Link}
           href={`/products/${product.id}`}
           fw={500}
           lineClamp={2}
-          style={{ textDecoration: 'none', color: 'inherit' }}
+          style={{ textDecoration: 'none', color: 'inherit', minHeight: '2.8em' }}
         >
           {product.name}
         </Text>
@@ -102,12 +102,12 @@ function ProductCard({ product }: { product: Product }) {
 
         <Button
           fullWidth
-          mt="md"
           radius="md"
           leftSection={<IconShoppingCart size={18} />}
           onClick={handleAddToCart}
           loading={isAdding}
           disabled={product.stock === 0}
+          style={{ marginTop: 'auto' }}
         >
           {product.stock === 0 ? 'Agotado' : 'Agregar al carrito'}
         </Button>
@@ -152,12 +152,12 @@ export function ProductCarousel({
           </Group>
         ) : products.length > 0 ? (
           <Carousel
-            slideSize={{ base: '100%', xs: '50%', sm: '33.333%', md: '25%' }}
+            slideSize={{ base: '100%', xs: '50%', sm: '33.333333%', md: '25%' }}
             slideGap="md"
             align="start"
-            slidesToScroll={1}
+            slidesToScroll={{ base: 1, xs: 1, sm: 2, md: 3 }}
             withControls
-            loop
+            loop={products.length > 4}
             styles={{
               control: {
                 backgroundColor: 'white',

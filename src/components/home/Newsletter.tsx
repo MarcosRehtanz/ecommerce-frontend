@@ -11,34 +11,28 @@ import {
   Group,
   Stack,
 } from '@mantine/core';
-import { notifications } from '@mantine/notifications';
 import { IconMail, IconCheck } from '@tabler/icons-react';
+import { useNewsletterSubscribe } from '@/hooks/useNewsletter';
 
 export function Newsletter() {
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const { mutate: subscribe, isPending } = useNewsletterSubscribe();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email) return;
 
-    setLoading(true);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-
-    setLoading(false);
-    setSubscribed(true);
-    setEmail('');
-
-    notifications.show({
-      title: '¡Suscripción exitosa!',
-      message: 'Recibirás nuestras ofertas exclusivas en tu correo.',
-      color: 'green',
-      icon: <IconCheck size={18} />,
-    });
+    subscribe(
+      { email },
+      {
+        onSuccess: () => {
+          setSubscribed(true);
+          setEmail('');
+        },
+      }
+    );
   };
 
   return (
@@ -73,8 +67,9 @@ export function Newsletter() {
                 type="submit"
                 size="md"
                 radius="md"
-                loading={loading}
+                loading={isPending}
                 disabled={subscribed}
+                leftSection={subscribed ? <IconCheck size={18} /> : undefined}
               >
                 {subscribed ? '¡Suscrito!' : 'Suscribirme'}
               </Button>

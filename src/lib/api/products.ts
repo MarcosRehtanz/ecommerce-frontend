@@ -6,6 +6,7 @@ export interface CreateProductDto {
   description: string;
   price: number;
   originalPrice?: number | null;
+  featured?: boolean;
   stock: number;
   imageUrl?: string;
   imageData?: string;
@@ -17,6 +18,7 @@ export interface UpdateProductDto {
   description?: string;
   price?: number;
   originalPrice?: number | null;
+  featured?: boolean;
   stock?: number;
   imageUrl?: string;
   imageData?: string | null;
@@ -29,6 +31,7 @@ export interface ProductsQueryParams extends PaginationParams {
   maxPrice?: number;
   inStock?: boolean;
   isActive?: boolean;
+  featured?: boolean;
   categoryId?: string;
   category?: string; // slug
 }

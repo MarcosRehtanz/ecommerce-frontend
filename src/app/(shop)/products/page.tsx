@@ -21,6 +21,7 @@ import {
   Pagination,
 } from '@mantine/core';
 import { IconSearch, IconShoppingCart } from '@tabler/icons-react';
+import Link from 'next/link';
 import { notifications } from '@mantine/notifications';
 import { useProducts } from '@/hooks/useProducts';
 import { useCategories } from '@/hooks/useCategories';
@@ -30,15 +31,14 @@ import { getProductImageSrc } from '@/utils/image';
 
 export default function ProductsPage() {
   const searchParams = useSearchParams();
-  const categoryParam = searchParams.get('category');
 
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState('');
-  const [category, setCategory] = useState<string | null>(categoryParam);
-  const [sortBy, setSortBy] = useState<string | null>('createdAt');
-  const [sortOrder, setSortOrder] = useState<string | null>('desc');
-  const [minPrice, setMinPrice] = useState<number | ''>('');
-  const [maxPrice, setMaxPrice] = useState<number | ''>('');
+  const [search, setSearch] = useState(searchParams.get('search') || '');
+  const [category, setCategory] = useState<string | null>(searchParams.get('category'));
+  const [sortBy, setSortBy] = useState<string | null>(searchParams.get('sortBy') || 'createdAt');
+  const [sortOrder, setSortOrder] = useState<string | null>(searchParams.get('sortOrder') || 'desc');
+  const [minPrice, setMinPrice] = useState<number | ''>(searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : '');
+  const [maxPrice, setMaxPrice] = useState<number | ''>(searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : '');
 
   const { data: categoriesData } = useCategories();
 
@@ -163,7 +163,7 @@ export default function ProductsPage() {
               {data?.data.map((product) => (
                 <Grid.Col key={product.id} span={{ base: 12, sm: 6, md: 4, lg: 3 }}>
                   <Card shadow="sm" padding="lg" radius="md" withBorder h="100%">
-                    <Card.Section>
+                    <Card.Section component={Link} href={`/products/${product.id}`}>
                       <Image
                         src={getProductImageSrc(product.imageData, product.imageUrl)}
                         height={200}
@@ -174,7 +174,13 @@ export default function ProductsPage() {
 
                     <Stack gap="sm" mt="md" style={{ flex: 1 }}>
                       <Group justify="space-between">
-                        <Text fw={500} lineClamp={1}>
+                        <Text
+                          component={Link}
+                          href={`/products/${product.id}`}
+                          fw={500}
+                          lineClamp={1}
+                          style={{ textDecoration: 'none', color: 'inherit' }}
+                        >
                           {product.name}
                         </Text>
                         {product.stock === 0 && (
@@ -187,9 +193,16 @@ export default function ProductsPage() {
                       </Text>
 
                       <Group justify="space-between" mt="auto">
-                        <Text size="xl" fw={700} c="blue">
-                          ${Number(product.price).toFixed(2)}
-                        </Text>
+                        <Stack gap={0}>
+                          {product.originalPrice && Number(product.originalPrice) > Number(product.price) && (
+                            <Text size="sm" td="line-through" c="dimmed">
+                              ${Number(product.originalPrice).toFixed(2)}
+                            </Text>
+                          )}
+                          <Text size="xl" fw={700} c="blue">
+                            ${Number(product.price).toFixed(2)}
+                          </Text>
+                        </Stack>
                         <Button
                           leftSection={<IconShoppingCart size={16} />}
                           disabled={product.stock === 0}

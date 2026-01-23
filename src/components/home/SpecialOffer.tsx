@@ -35,6 +35,8 @@ export function SpecialOffer() {
   const description = offerConfig?.description || defaults.description;
   const buttonText = offerConfig?.buttonText || defaults.buttonText;
   const buttonLink = offerConfig?.buttonLink || defaults.buttonLink;
+  const discountText = offerConfig?.discountText || '-40%';
+  const discountSubtext = offerConfig?.discountSubtext || 'En productos seleccionados';
 
   // Don't render if explicitly set to not visible
   if (offerConfig && !offerConfig.isVisible) {
@@ -124,10 +126,10 @@ export function SpecialOffer() {
             <Grid.Col span={{ base: 12, md: 5 }}>
               <Box ta="center">
                 <Text c="white" fz={72} fw={900} lh={1}>
-                  -40%
+                  {discountText}
                 </Text>
                 <Text c="white" size="xl" fw={500}>
-                  En toda la tienda
+                  {discountSubtext}
                 </Text>
               </Box>
             </Grid.Col>

@@ -10,13 +10,12 @@ import {
   Image,
   Badge,
   Button,
-  ActionIcon,
   Box,
   Skeleton,
 } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
 import Link from 'next/link';
-import { IconArrowRight, IconHeart, IconShoppingCart } from '@tabler/icons-react';
+import { IconArrowRight, IconShoppingCart } from '@tabler/icons-react';
 import { useProducts } from '@/hooks/useProducts';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { getProductImageSrc } from '@/utils/image';
@@ -65,17 +64,6 @@ function ProductCard({ product }: { product: Product }) {
             -{discountPercent}%
           </Badge>
         )}
-        <ActionIcon
-          pos="absolute"
-          top={10}
-          right={10}
-          variant="white"
-          radius="xl"
-          size="lg"
-          aria-label="Agregar a favoritos"
-        >
-          <IconHeart size={18} />
-        </ActionIcon>
       </Card.Section>
 
       <Box mt="md" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>

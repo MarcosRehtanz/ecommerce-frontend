@@ -36,6 +36,7 @@ const productSchema = z.object({
   stock: z.number().min(0, 'El stock debe ser mayor o igual a 0'),
   imageUrl: z.string().url('URL inválida').or(z.literal('')),
   categoryId: z.string().nullable(),
+  featured: z.boolean(),
   isActive: z.boolean(),
 });
 
@@ -75,6 +76,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
       stock: 0,
       imageUrl: '',
       categoryId: null,
+      featured: false,
       isActive: true,
     },
   });
@@ -90,6 +92,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
       setValue('stock', product.stock);
       setValue('imageUrl', product.imageUrl || '');
       setValue('categoryId', product.categoryId || null);
+      setValue('featured', product.featured ?? false);
       setValue('isActive', product.isActive);
       setImageData(product.imageData || null);
     } else {
@@ -163,6 +166,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
         description: values.description,
         price: values.price,
         originalPrice: values.originalPrice,
+        featured: values.featured,
         stock: values.stock,
         imageUrl: values.imageUrl || undefined,
         imageData: imageData,
@@ -185,6 +189,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
         description: values.description,
         price: values.price,
         originalPrice: values.originalPrice,
+        featured: values.featured,
         stock: values.stock,
         imageUrl: values.imageUrl || undefined,
         imageData: imageData || undefined,
@@ -378,6 +383,18 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
             />
           </Box>
 
+          <Controller
+            name="featured"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                label="Producto destacado"
+                description="Se muestra en la sección 'Los más populares' del homepage"
+                checked={field.value}
+                onChange={(event) => field.onChange(event.currentTarget.checked)}
+              />
+            )}
+          />
           <Controller
             name="isActive"
             control={control}

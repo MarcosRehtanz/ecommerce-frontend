@@ -32,6 +32,7 @@ export interface Product {
   description: string;
   price: number;
   originalPrice?: number | null;
+  featured: boolean;
   stock: number;
   imageUrl?: string;
   imageData?: string;
@@ -160,6 +161,8 @@ export interface SpecialOfferConfig {
   description: string;
   buttonText: string;
   buttonLink: string;
+  discountText?: string;
+  discountSubtext?: string;
   endDate?: string;
   isVisible: boolean;
   backgroundColor?: string;

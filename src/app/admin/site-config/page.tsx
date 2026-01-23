@@ -263,6 +263,8 @@ function SpecialOfferForm({ configs }: { configs: SiteConfig[] | undefined }) {
   const [description, setDescription] = useState('');
   const [buttonText, setButtonText] = useState('');
   const [buttonLink, setButtonLink] = useState('');
+  const [discountText, setDiscountText] = useState('');
+  const [discountSubtext, setDiscountSubtext] = useState('');
   const [endDate, setEndDate] = useState('');
   const [isVisible, setIsVisible] = useState(true);
   const [backgroundColor, setBackgroundColor] = useState('');
@@ -276,6 +278,8 @@ function SpecialOfferForm({ configs }: { configs: SiteConfig[] | undefined }) {
       setDescription(config.description || '');
       setButtonText(config.buttonText || '');
       setButtonLink(config.buttonLink || '');
+      setDiscountText(config.discountText || '');
+      setDiscountSubtext(config.discountSubtext || '');
       setEndDate(config.endDate || '');
       setIsVisible(config.isVisible ?? true);
       setBackgroundColor(config.backgroundColor || '');
@@ -290,6 +294,8 @@ function SpecialOfferForm({ configs }: { configs: SiteConfig[] | undefined }) {
       description,
       buttonText,
       buttonLink,
+      discountText: discountText || undefined,
+      discountSubtext: discountSubtext || undefined,
       endDate: endDate || undefined,
       isVisible,
       backgroundColor: backgroundColor || undefined,
@@ -337,6 +343,22 @@ function SpecialOfferForm({ configs }: { configs: SiteConfig[] | undefined }) {
           placeholder="/products?onSale=true"
           value={buttonLink}
           onChange={(e) => setButtonLink(e.target.value)}
+        />
+      </Group>
+      <Group grow>
+        <TextInput
+          label="Texto de descuento"
+          placeholder="-40%"
+          description="Texto grande que se muestra en la oferta"
+          value={discountText}
+          onChange={(e) => setDiscountText(e.target.value)}
+        />
+        <TextInput
+          label="Subtexto de descuento"
+          placeholder="En productos seleccionados"
+          description="Texto debajo del descuento"
+          value={discountSubtext}
+          onChange={(e) => setDiscountSubtext(e.target.value)}
         />
       </Group>
       <Group grow>

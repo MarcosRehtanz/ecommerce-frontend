@@ -22,12 +22,12 @@ export default function HomePage() {
       {/* Categorías Destacadas */}
       <CategoryGrid />
 
-      {/* Productos más vendidos */}
+      {/* Productos destacados */}
       <ProductCarousel
-        title="Los más vendidos"
-        subtitle="Lo que otros están comprando"
-        viewAllLink="/products?sortBy=price&sortOrder=desc"
-        queryParams={{ sortBy: 'price', sortOrder: 'desc' }}
+        title="Los más populares"
+        subtitle="Lo que otros están eligiendo"
+        viewAllLink="/products"
+        queryParams={{ featured: true }}
       />
 
       {/* Propuesta de valor */}

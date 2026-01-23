@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import {
   Group,
   Button,
@@ -13,6 +14,7 @@ import {
   Drawer,
   Stack,
   Divider,
+  TextInput,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -22,6 +24,7 @@ import {
   IconPackage,
   IconSettings,
   IconChevronDown,
+  IconSearch,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -36,6 +39,16 @@ export function Header() {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
+  const [searchValue, setSearchValue] = useState('');
+
+  const handleSearch = () => {
+    const trimmed = searchValue.trim();
+    if (trimmed) {
+      router.push(`/products?search=${encodeURIComponent(trimmed)}`);
+      setSearchValue('');
+      closeDrawer();
+    }
+  };
 
   const handleLogout = () => {
     logoutMutation.mutate();
@@ -66,6 +79,16 @@ export function Header() {
             <Button component={Link} href="/products" variant="subtle">
               Productos
             </Button>
+
+            <TextInput
+              placeholder="Buscar..."
+              leftSection={<IconSearch size={16} />}
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+              style={{ width: 200 }}
+              size="sm"
+            />
 
             {/* Cart - visible for all users */}
             <Indicator
@@ -172,6 +195,14 @@ export function Header() {
         zIndex={1000}
       >
         <Stack>
+          <TextInput
+            placeholder="Buscar productos..."
+            leftSection={<IconSearch size={16} />}
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleSearch(); }}
+          />
+
           <Button
             component={Link}
             href="/products"

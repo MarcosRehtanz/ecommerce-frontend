@@ -32,6 +32,7 @@ const productSchema = z.object({
   name: z.string().min(2, 'El nombre debe tener al menos 2 caracteres'),
   description: z.string().min(5, 'La descripción debe tener al menos 5 caracteres'),
   price: z.number().min(0, 'El precio debe ser mayor o igual a 0'),
+  originalPrice: z.number().min(0, 'El precio original debe ser mayor o igual a 0').nullable(),
   stock: z.number().min(0, 'El stock debe ser mayor o igual a 0'),
   imageUrl: z.string().url('URL inválida').or(z.literal('')),
   categoryId: z.string().nullable(),
@@ -70,6 +71,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
       name: '',
       description: '',
       price: 0,
+      originalPrice: null,
       stock: 0,
       imageUrl: '',
       categoryId: null,
@@ -84,6 +86,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
       setValue('name', product.name);
       setValue('description', product.description);
       setValue('price', Number(product.price));
+      setValue('originalPrice', product.originalPrice ? Number(product.originalPrice) : null);
       setValue('stock', product.stock);
       setValue('imageUrl', product.imageUrl || '');
       setValue('categoryId', product.categoryId || null);
@@ -159,6 +162,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
         name: values.name,
         description: values.description,
         price: values.price,
+        originalPrice: values.originalPrice,
         stock: values.stock,
         imageUrl: values.imageUrl || undefined,
         imageData: imageData,
@@ -180,6 +184,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
         name: values.name,
         description: values.description,
         price: values.price,
+        originalPrice: values.originalPrice,
         stock: values.stock,
         imageUrl: values.imageUrl || undefined,
         imageData: imageData || undefined,
@@ -231,7 +236,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
               control={control}
               render={({ field }) => (
                 <NumberInput
-                  label="Precio"
+                  label="Precio actual"
                   placeholder="0.00"
                   required
                   min={0}
@@ -240,6 +245,23 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
                   value={field.value}
                   onChange={(val) => field.onChange(val || 0)}
                   error={errors.price?.message}
+                />
+              )}
+            />
+            <Controller
+              name="originalPrice"
+              control={control}
+              render={({ field }) => (
+                <NumberInput
+                  label="Precio original"
+                  description="Dejar vacío si no hay descuento"
+                  placeholder="0.00"
+                  min={0}
+                  decimalScale={2}
+                  prefix="$"
+                  value={field.value ?? ''}
+                  onChange={(val) => field.onChange(val === '' ? null : val || null)}
+                  error={errors.originalPrice?.message}
                 />
               )}
             />

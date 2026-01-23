@@ -5,6 +5,7 @@ export interface CreateProductDto {
   name: string;
   description: string;
   price: number;
+  originalPrice?: number | null;
   stock: number;
   imageUrl?: string;
   imageData?: string;
@@ -15,6 +16,7 @@ export interface UpdateProductDto {
   name?: string;
   description?: string;
   price?: number;
+  originalPrice?: number | null;
   stock?: number;
   imageUrl?: string;
   imageData?: string | null;

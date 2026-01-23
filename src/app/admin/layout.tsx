@@ -15,6 +15,7 @@ import {
   IconCategory,
   IconUsers,
   IconShoppingCart,
+  IconSettings,
   IconArrowLeft,
 } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -28,6 +29,7 @@ const navItems = [
   { label: 'Categorías', icon: IconCategory, href: '/admin/categories' },
   { label: 'Pedidos', icon: IconShoppingCart, href: '/admin/orders' },
   { label: 'Usuarios', icon: IconUsers, href: '/admin/users' },
+  { label: 'Configuración', icon: IconSettings, href: '/admin/site-config' },
 ];
 
 export default function AdminLayout({

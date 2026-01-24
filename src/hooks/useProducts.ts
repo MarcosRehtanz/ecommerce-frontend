@@ -8,6 +8,7 @@ import {
   UpdateProductDto,
   ProductsQueryParams,
 } from '@/lib/api/products';
+import { Product } from '@/types';
 
 export const productsKeys = {
   all: ['products'] as const,
@@ -27,11 +28,12 @@ export function useProducts(params?: ProductsQueryParams) {
   });
 }
 
-export function useProduct(id: string) {
+export function useProduct(id: string, initialData?: Product | null) {
   return useQuery({
     queryKey: productsKeys.detail(id),
     queryFn: () => productsApi.getById(id),
     enabled: !!id,
+    initialData: initialData ?? undefined,
   });
 }
 

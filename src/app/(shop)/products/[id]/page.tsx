@@ -32,6 +32,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default function ProductDetailPage() {
-  return <ProductDetailClient />;
+export default async function ProductDetailPage({ params }: Props) {
+  const { id } = await params;
+  const product = await fetchProduct(id);
+
+  return <ProductDetailClient initialProduct={product} />;
 }

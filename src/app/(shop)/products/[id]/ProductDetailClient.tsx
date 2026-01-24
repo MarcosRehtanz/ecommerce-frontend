@@ -24,10 +24,15 @@ import { IconShoppingCart, IconArrowLeft } from '@tabler/icons-react';
 import { useProduct } from '@/hooks/useProducts';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { getProductImageSrc } from '@/utils/image';
+import { Product } from '@/types';
 
-export default function ProductDetailClient() {
+interface ProductDetailClientProps {
+  initialProduct: Product | null;
+}
+
+export default function ProductDetailClient({ initialProduct }: ProductDetailClientProps) {
   const { id } = useParams<{ id: string }>();
-  const { data: product, isLoading } = useProduct(id);
+  const { data: product, isLoading } = useProduct(id, initialProduct);
   const { addItem } = useUnifiedCart();
   const [quantity, setQuantity] = useState<number>(1);
 

@@ -56,6 +56,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
 
   // State for uploaded image (base64)
   const [imageData, setImageData] = useState<string | null>(null);
+  const [imageChanged, setImageChanged] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
   const {
@@ -95,9 +96,11 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
       setValue('featured', product.featured ?? false);
       setValue('isActive', product.isActive);
       setImageData(product.imageData || null);
+      setImageChanged(false);
     } else {
       reset();
       setImageData(null);
+      setImageChanged(false);
     }
   }, [product, opened, setValue, reset]);
 
@@ -118,6 +121,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
     try {
       const base64 = await fileToBase64(file);
       setImageData(base64);
+      setImageChanged(true);
       notifications.show({
         title: 'Imagen cargada',
         message: 'La imagen se cargó correctamente',
@@ -136,6 +140,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
 
   const handleRemoveImage = () => {
     setImageData(null);
+    setImageChanged(true);
   };
 
   const handleReject = (fileRejections: { file: File; errors: { code: string }[] }[]) => {
@@ -169,9 +174,10 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
         featured: values.featured,
         stock: values.stock,
         imageUrl: values.imageUrl || undefined,
-        imageData: imageData,
         isActive: values.isActive,
         categoryId: values.categoryId || null,
+        // Only send imageData if it was actually changed
+        ...(imageChanged ? { imageData } : {}),
       };
       updateProductMutation.mutate(
         { id: product.id, data: updateData },
@@ -193,7 +199,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
         stock: values.stock,
         imageUrl: values.imageUrl || undefined,
         imageData: imageData || undefined,
-        categoryId: values.categoryId || null,
+        categoryId: values.categoryId || undefined,
       };
       createProductMutation.mutate(createData, {
         onSuccess: () => {

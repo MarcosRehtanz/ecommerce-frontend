@@ -30,6 +30,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUser, useLogout } from '@/hooks/useAuth';
 import { useCartStore } from '@/stores/cartStore';
+import { useHomepageConfig } from '@/hooks/useSiteConfig';
 
 export function Header() {
   const router = useRouter();
@@ -40,6 +41,8 @@ export function Header() {
   const [drawerOpened, { toggle: toggleDrawer, close: closeDrawer }] =
     useDisclosure(false);
   const [searchValue, setSearchValue] = useState('');
+  const { data: config } = useHomepageConfig();
+  const storeName = config?.general?.storeName || 'Mi Tienda';
 
   const handleSearch = () => {
     const trimmed = searchValue.trim();
@@ -71,7 +74,7 @@ export function Header() {
             fw={700}
             style={{ textDecoration: 'none', color: 'inherit' }}
           >
-            E-Commerce B2C
+            {storeName}
           </Text>
 
           {/* Desktop Navigation */}

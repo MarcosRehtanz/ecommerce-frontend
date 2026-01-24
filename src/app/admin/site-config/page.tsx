@@ -23,9 +23,10 @@ import {
   IconPhoto,
   IconFlame,
   IconDeviceFloppy,
+  IconBuilding,
 } from '@tabler/icons-react';
 import { useSiteConfigsAdmin, useCreateSiteConfig, useUpdateSiteConfig } from '@/hooks/useSiteConfig';
-import { SiteConfig, TopBarConfig, HeroConfig, SpecialOfferConfig } from '@/types';
+import { SiteConfig, GeneralConfig, TopBarConfig, HeroConfig, SpecialOfferConfig } from '@/types';
 
 function getConfigValue<T>(configs: SiteConfig[] | undefined, key: string): T | null {
   const config = configs?.find((c) => c.key === key);
@@ -39,6 +40,118 @@ function getConfigIsActive(configs: SiteConfig[] | undefined, key: string): bool
 
 function configExists(configs: SiteConfig[] | undefined, key: string): boolean {
   return !!configs?.find((c) => c.key === key);
+}
+
+// ==================== General Form ====================
+function GeneralForm({ configs }: { configs: SiteConfig[] | undefined }) {
+  const createMutation = useCreateSiteConfig();
+  const updateMutation = useUpdateSiteConfig();
+  const existing = configExists(configs, 'general');
+
+  const [storeName, setStoreName] = useState('');
+  const [storeDescription, setStoreDescription] = useState('');
+  const [facebook, setFacebook] = useState('');
+  const [instagram, setInstagram] = useState('');
+  const [twitter, setTwitter] = useState('');
+  const [tiktok, setTiktok] = useState('');
+  const [isActive, setIsActive] = useState(true);
+
+  useEffect(() => {
+    const config = getConfigValue<GeneralConfig>(configs, 'general');
+    if (config) {
+      setStoreName(config.storeName || '');
+      setStoreDescription(config.storeDescription || '');
+      setFacebook(config.socialLinks?.facebook || '');
+      setInstagram(config.socialLinks?.instagram || '');
+      setTwitter(config.socialLinks?.twitter || '');
+      setTiktok(config.socialLinks?.tiktok || '');
+    }
+    setIsActive(getConfigIsActive(configs, 'general'));
+  }, [configs]);
+
+  const handleSave = () => {
+    const socialLinks: GeneralConfig['socialLinks'] = {};
+    if (facebook) socialLinks.facebook = facebook;
+    if (instagram) socialLinks.instagram = instagram;
+    if (twitter) socialLinks.twitter = twitter;
+    if (tiktok) socialLinks.tiktok = tiktok;
+
+    const value: GeneralConfig = {
+      storeName: storeName || 'Mi Tienda',
+      storeDescription: storeDescription || undefined,
+      socialLinks: Object.keys(socialLinks).length > 0 ? socialLinks : undefined,
+    };
+
+    if (existing) {
+      updateMutation.mutate({ key: 'general', data: { value, isActive } });
+    } else {
+      createMutation.mutate({ key: 'general', value, isActive });
+    }
+  };
+
+  const isPending = createMutation.isPending || updateMutation.isPending;
+
+  return (
+    <Stack>
+      <TextInput
+        label="Nombre de la tienda"
+        placeholder="Mi Tienda"
+        value={storeName}
+        onChange={(e) => setStoreName(e.target.value)}
+        description="Se muestra en el header, footer y metadatos SEO"
+      />
+      <Textarea
+        label="Descripción"
+        placeholder="Tu tienda online de confianza..."
+        value={storeDescription}
+        onChange={(e) => setStoreDescription(e.target.value)}
+        minRows={2}
+      />
+      <Text size="sm" fw={500} mt="xs">Redes Sociales</Text>
+      <Group grow>
+        <TextInput
+          label="Facebook"
+          placeholder="https://facebook.com/mitienda"
+          value={facebook}
+          onChange={(e) => setFacebook(e.target.value)}
+        />
+        <TextInput
+          label="Instagram"
+          placeholder="https://instagram.com/mitienda"
+          value={instagram}
+          onChange={(e) => setInstagram(e.target.value)}
+        />
+      </Group>
+      <Group grow>
+        <TextInput
+          label="Twitter / X"
+          placeholder="https://twitter.com/mitienda"
+          value={twitter}
+          onChange={(e) => setTwitter(e.target.value)}
+        />
+        <TextInput
+          label="TikTok"
+          placeholder="https://tiktok.com/@mitienda"
+          value={tiktok}
+          onChange={(e) => setTiktok(e.target.value)}
+        />
+      </Group>
+      <Switch
+        label="Configuración activa"
+        checked={isActive}
+        onChange={(e) => setIsActive(e.currentTarget.checked)}
+      />
+      <Group justify="flex-end">
+        <Button
+          leftSection={<IconDeviceFloppy size={16} />}
+          onClick={handleSave}
+          loading={isPending}
+        >
+          {existing ? 'Guardar Cambios' : 'Crear Configuración'}
+        </Button>
+      </Group>
+    </Stack>
+  );
 }
 
 // ==================== TopBar Form ====================
@@ -425,7 +538,21 @@ export default function AdminSiteConfigPage() {
           </div>
         </Group>
 
-        <Accordion variant="separated" defaultValue="topbar">
+        <Accordion variant="separated" defaultValue="general">
+          <Accordion.Item value="general">
+            <Accordion.Control icon={<IconBuilding size={20} />}>
+              <Group>
+                <Text fw={500}>General</Text>
+                {configExists(configs, 'general') && (
+                  <Badge size="sm" color="green" variant="light">Configurada</Badge>
+                )}
+              </Group>
+            </Accordion.Control>
+            <Accordion.Panel>
+              <GeneralForm configs={configs} />
+            </Accordion.Panel>
+          </Accordion.Item>
+
           <Accordion.Item value="topbar">
             <Accordion.Control icon={<IconBell size={20} />}>
               <Group>

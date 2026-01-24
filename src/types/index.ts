@@ -168,7 +168,19 @@ export interface SpecialOfferConfig {
   backgroundColor?: string;
 }
 
+export interface GeneralConfig {
+  storeName: string;
+  storeDescription?: string;
+  socialLinks?: {
+    facebook?: string;
+    instagram?: string;
+    twitter?: string;
+    tiktok?: string;
+  };
+}
+
 export interface HomepageConfig {
+  general?: GeneralConfig;
   topbar?: TopBarConfig;
   hero?: HeroConfig;
   'special-offer'?: SpecialOfferConfig;

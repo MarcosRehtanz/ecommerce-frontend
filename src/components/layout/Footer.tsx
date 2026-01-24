@@ -8,10 +8,8 @@ import {
   Stack,
   SimpleGrid,
   Title,
-  Box,
   ActionIcon,
   Divider,
-  Image,
 } from '@mantine/core';
 import Link from 'next/link';
 import {
@@ -20,40 +18,34 @@ import {
   IconBrandTwitter,
   IconBrandTiktok,
 } from '@tabler/icons-react';
+import { useHomepageConfig } from '@/hooks/useSiteConfig';
 
-const footerLinks = {
-  tienda: [
-    { label: 'Todos los productos', href: '/products' },
-    { label: 'Novedades', href: '/products?sort=newest' },
-    { label: 'Ofertas', href: '/products?onSale=true' },
-    { label: 'Más vendidos', href: '/products?sort=best-sellers' },
-  ],
-  ayuda: [
-    { label: 'Preguntas frecuentes', href: '/faq' },
-    { label: 'Envíos y entregas', href: '/shipping' },
-    { label: 'Devoluciones', href: '/returns' },
-    { label: 'Contacto', href: '/contact' },
-  ],
-  empresa: [
-    { label: 'Sobre nosotros', href: '/about' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Trabaja con nosotros', href: '/careers' },
-  ],
-  legal: [
-    { label: 'Términos y condiciones', href: '/terms' },
-    { label: 'Política de privacidad', href: '/privacy' },
-    { label: 'Cookies', href: '/cookies' },
-  ],
-};
+const shopLinks = [
+  { label: 'Todos los productos', href: '/products' },
+  { label: 'Novedades', href: '/products?sortBy=createdAt&sortOrder=desc' },
+  { label: 'Los más populares', href: '/products?featured=true' },
+];
 
-const socialLinks = [
-  { icon: IconBrandFacebook, href: 'https://facebook.com', label: 'Facebook' },
-  { icon: IconBrandInstagram, href: 'https://instagram.com', label: 'Instagram' },
-  { icon: IconBrandTwitter, href: 'https://twitter.com', label: 'Twitter' },
-  { icon: IconBrandTiktok, href: 'https://tiktok.com', label: 'TikTok' },
+const accountLinks = [
+  { label: 'Iniciar sesión', href: '/login' },
+  { label: 'Crear cuenta', href: '/register' },
+  { label: 'Mis pedidos', href: '/orders' },
+  { label: 'Mi carrito', href: '/cart' },
 ];
 
 export function Footer() {
+  const { data: config } = useHomepageConfig();
+  const storeName = config?.general?.storeName || 'Mi Tienda';
+  const storeDescription = config?.general?.storeDescription || 'Tu tienda online de confianza.';
+  const socialLinks = config?.general?.socialLinks;
+
+  const socialItems = [
+    { icon: IconBrandFacebook, href: socialLinks?.facebook, label: 'Facebook' },
+    { icon: IconBrandInstagram, href: socialLinks?.instagram, label: 'Instagram' },
+    { icon: IconBrandTwitter, href: socialLinks?.twitter, label: 'Twitter' },
+    { icon: IconBrandTiktok, href: socialLinks?.tiktok, label: 'TikTok' },
+  ].filter((s) => s.href);
+
   return (
     <footer
       style={{
@@ -62,32 +54,34 @@ export function Footer() {
       }}
     >
       <Container size="xl" py="xl">
-        <SimpleGrid cols={{ base: 2, sm: 2, md: 5 }} spacing="xl">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="xl">
           {/* Brand Column */}
-          <Stack gap="md" style={{ gridColumn: 'span 1' }}>
+          <Stack gap="md">
             <Text size="xl" fw={700}>
-              E-Commerce B2C
+              {storeName}
             </Text>
             <Text size="sm" c="dimmed">
-              Tu tienda online de confianza. Productos de calidad con envío a todo el país.
+              {storeDescription}
             </Text>
-            <Group gap="xs">
-              {socialLinks.map((social) => (
-                <ActionIcon
-                  key={social.label}
-                  component="a"
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  variant="subtle"
-                  color="gray"
-                  size="lg"
-                  aria-label={social.label}
-                >
-                  <social.icon size={20} />
-                </ActionIcon>
-              ))}
-            </Group>
+            {socialItems.length > 0 && (
+              <Group gap="xs">
+                {socialItems.map((social) => (
+                  <ActionIcon
+                    key={social.label}
+                    component="a"
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="subtle"
+                    color="gray"
+                    size="lg"
+                    aria-label={social.label}
+                  >
+                    <social.icon size={20} />
+                  </ActionIcon>
+                ))}
+              </Group>
+            )}
           </Stack>
 
           {/* Tienda */}
@@ -95,7 +89,7 @@ export function Footer() {
             <Title order={6} tt="uppercase" c="dimmed">
               Tienda
             </Title>
-            {footerLinks.tienda.map((link) => (
+            {shopLinks.map((link) => (
               <Anchor
                 key={link.href}
                 component={Link}
@@ -108,12 +102,12 @@ export function Footer() {
             ))}
           </Stack>
 
-          {/* Ayuda */}
+          {/* Mi Cuenta */}
           <Stack gap="xs">
             <Title order={6} tt="uppercase" c="dimmed">
-              Ayuda
+              Mi Cuenta
             </Title>
-            {footerLinks.ayuda.map((link) => (
+            {accountLinks.map((link) => (
               <Anchor
                 key={link.href}
                 component={Link}
@@ -126,75 +120,29 @@ export function Footer() {
             ))}
           </Stack>
 
-          {/* Empresa */}
+          {/* Info */}
           <Stack gap="xs">
             <Title order={6} tt="uppercase" c="dimmed">
-              Empresa
+              Información
             </Title>
-            {footerLinks.empresa.map((link) => (
-              <Anchor
-                key={link.href}
-                component={Link}
-                href={link.href}
-                size="sm"
-                c="dark.6"
-              >
-                {link.label}
-              </Anchor>
-            ))}
-          </Stack>
-
-          {/* Legal */}
-          <Stack gap="xs">
-            <Title order={6} tt="uppercase" c="dimmed">
-              Legal
-            </Title>
-            {footerLinks.legal.map((link) => (
-              <Anchor
-                key={link.href}
-                component={Link}
-                href={link.href}
-                size="sm"
-                c="dark.6"
-              >
-                {link.label}
-              </Anchor>
-            ))}
+            <Text size="sm" c="dimmed">
+              Envío en 24-48h a todo el país.
+            </Text>
+            <Text size="sm" c="dimmed">
+              Devoluciones gratuitas hasta 30 días.
+            </Text>
+            <Text size="sm" c="dimmed">
+              Pago seguro con tarjeta o PayPal.
+            </Text>
           </Stack>
         </SimpleGrid>
 
         <Divider my="xl" />
 
-        {/* Bottom Section */}
-        <Group justify="space-between" wrap="wrap" gap="md">
+        <Group justify="center">
           <Text size="sm" c="dimmed">
-            © {new Date().getFullYear()} E-Commerce B2C. Todos los derechos reservados.
+            &copy; {new Date().getFullYear()} {storeName}. Todos los derechos reservados.
           </Text>
-
-          {/* Payment Methods */}
-          <Group gap="xs">
-            <Text size="xs" c="dimmed">
-              Métodos de pago:
-            </Text>
-            <Group gap={4}>
-              {['Visa', 'MC', 'Amex', 'PayPal'].map((method) => (
-                <Box
-                  key={method}
-                  px="xs"
-                  py={2}
-                  bg="white"
-                  style={{
-                    borderRadius: 4,
-                    border: '1px solid var(--mantine-color-gray-3)',
-                  }}
-                >
-                  <Text size="xs" fw={500}>
-                    {method}
-                  </Text>
-                </Box>
-              ))}
-            </Group>
-          </Group>
         </Group>
       </Container>
     </footer>

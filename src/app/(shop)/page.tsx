@@ -2,7 +2,6 @@
 
 import {
   HeroSection,
-  SocialProof,
   CategoryGrid,
   ProductCarousel,
   ValueProposition,
@@ -15,9 +14,6 @@ export default function HomePage() {
     <>
       {/* Hero Section - Primera impresión */}
       <HeroSection />
-
-      {/* Social Proof - Generar confianza */}
-      <SocialProof />
 
       {/* Categorías Destacadas */}
       <CategoryGrid />

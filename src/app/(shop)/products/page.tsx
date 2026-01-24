@@ -39,6 +39,7 @@ export default function ProductsPage() {
   const [sortOrder, setSortOrder] = useState<string | null>(searchParams.get('sortOrder') || 'desc');
   const [minPrice, setMinPrice] = useState<number | ''>(searchParams.get('minPrice') ? Number(searchParams.get('minPrice')) : '');
   const [maxPrice, setMaxPrice] = useState<number | ''>(searchParams.get('maxPrice') ? Number(searchParams.get('maxPrice')) : '');
+  const featured = searchParams.get('featured') === 'true' ? true : undefined;
 
   const { data: categoriesData } = useCategories();
 
@@ -51,6 +52,7 @@ export default function ProductsPage() {
     sortOrder: (sortOrder as 'asc' | 'desc') || 'desc',
     minPrice: minPrice !== '' ? minPrice : undefined,
     maxPrice: maxPrice !== '' ? maxPrice : undefined,
+    featured,
   });
 
   const { addItem } = useUnifiedCart();

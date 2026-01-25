@@ -10,40 +10,52 @@ import {
   Badge,
   Stack,
   Button,
-  Table,
   Select,
   Pagination,
   Skeleton,
   Modal,
-  Image,
+  Box,
+  Flex,
+  Divider,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconPackage, IconEye, IconRefresh } from '@tabler/icons-react';
+import {
+  IconPackage,
+  IconEye,
+  IconRefresh,
+  IconCreditCard,
+  IconX,
+  IconCash,
+  IconClock,
+  IconCheck,
+  IconTruck,
+  IconCircleCheck,
+} from '@tabler/icons-react';
 import Link from 'next/link';
 import { useMyOrders, useCancelOrder } from '@/hooks/useOrders';
-import { Order, OrderStatus } from '@/lib/api/orders';
-import { getProductImageSrc } from '@/utils/image';
+import { useCreatePaymentPreference } from '@/hooks/usePayments';
+import { Order, OrderStatus, PaymentStatus } from '@/lib/api/orders';
 
-const statusColors: Record<OrderStatus, string> = {
-  PENDING: 'yellow',
-  CONFIRMED: 'blue',
-  SHIPPED: 'cyan',
-  DELIVERED: 'green',
-  CANCELLED: 'red',
+const statusConfig: Record<OrderStatus, { color: string; label: string; icon: React.ReactNode }> = {
+  PENDING: { color: 'yellow', label: 'Pendiente', icon: <IconClock size={14} /> },
+  CONFIRMED: { color: 'blue', label: 'Confirmado', icon: <IconCheck size={14} /> },
+  SHIPPED: { color: 'cyan', label: 'Enviado', icon: <IconTruck size={14} /> },
+  DELIVERED: { color: 'green', label: 'Entregado', icon: <IconCircleCheck size={14} /> },
+  CANCELLED: { color: 'red', label: 'Cancelado', icon: <IconX size={14} /> },
 };
 
-const statusLabels: Record<OrderStatus, string> = {
-  PENDING: 'Pendiente',
-  CONFIRMED: 'Confirmado',
-  SHIPPED: 'Enviado',
-  DELIVERED: 'Entregado',
-  CANCELLED: 'Cancelado',
+const paymentConfig: Record<PaymentStatus, { color: string; label: string; icon: React.ReactNode }> = {
+  PENDING: { color: 'orange', label: 'Pago pendiente', icon: <IconCash size={14} /> },
+  APPROVED: { color: 'green', label: 'Pagado', icon: <IconCheck size={14} /> },
+  REJECTED: { color: 'red', label: 'Rechazado', icon: <IconX size={14} /> },
+  CANCELLED: { color: 'gray', label: 'Cancelado', icon: <IconX size={14} /> },
 };
 
 export default function OrdersPage() {
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
+  const [payingOrderId, setPayingOrderId] = useState<string | null>(null);
   const [cancelOpened, { open: openCancel, close: closeCancel }] = useDisclosure(false);
 
   const { data, isLoading, refetch, isFetching } = useMyOrders({
@@ -53,6 +65,7 @@ export default function OrdersPage() {
   });
 
   const cancelOrderMutation = useCancelOrder();
+  const createPreferenceMutation = useCreatePaymentPreference();
 
   const handleCancelClick = (order: Order) => {
     setSelectedOrder(order);
@@ -70,13 +83,18 @@ export default function OrdersPage() {
     }
   };
 
+  const handlePay = (orderId: string) => {
+    setPayingOrderId(orderId);
+    createPreferenceMutation.mutate(orderId);
+  };
+
   if (isLoading) {
     return (
       <Container size="lg" py="xl">
         <Title order={1} mb="lg">Mis Pedidos</Title>
-        <Stack gap="md">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} height={100} radius="md" />
+        <Stack gap="sm">
+          {[1, 2, 3, 4, 5].map((i) => (
+            <Skeleton key={i} height={72} radius="md" />
           ))}
         </Stack>
       </Container>
@@ -110,6 +128,7 @@ export default function OrdersPage() {
             leftSection={<IconRefresh size={16} />}
             onClick={() => refetch()}
             loading={isFetching && !isLoading}
+            size="sm"
           >
             Actualizar
           </Button>
@@ -128,77 +147,111 @@ export default function OrdersPage() {
               { value: 'CANCELLED', label: 'Cancelado' },
             ]}
             clearable
-            style={{ width: 180 }}
+            size="sm"
+            style={{ width: 160 }}
           />
         </Group>
       </Group>
 
-      <Stack gap="md">
-        {data.data.map((order) => (
-          <Card key={order.id} shadow="sm" padding="lg" withBorder>
-            <Group justify="space-between" mb="md">
-              <Group>
-                <Text fw={500}>Pedido #{order.id.slice(0, 8)}</Text>
-                <Badge color={statusColors[order.status]}>
-                  {statusLabels[order.status]}
-                </Badge>
-              </Group>
-              <Text c="dimmed" size="sm">
-                {new Date(order.createdAt).toLocaleDateString('es-ES', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })}
-              </Text>
-            </Group>
+      <Stack gap="xs">
+        {data.data.map((order) => {
+          const status = statusConfig[order.status];
+          const payment = paymentConfig[order.paymentStatus];
+          const canPay = order.status === 'PENDING' && order.paymentStatus === 'PENDING';
+          const canCancel = order.status === 'PENDING';
+          const itemCount = order.items.reduce((sum, item) => sum + item.quantity, 0);
 
-            <Group gap="xs" mb="md">
-              {order.items.slice(0, 3).map((item) => (
-                <Image
-                  key={item.id}
-                  src={getProductImageSrc(item.product.imageData, item.product.imageUrl)}
-                  width={50}
-                  height={50}
-                  radius="sm"
-                  alt={item.product.name}
-                  fallbackSrc="https://placehold.co/50x50?text=N/A"
-                />
-              ))}
-              {order.items.length > 3 && (
-                <Text size="sm" c="dimmed">
-                  +{order.items.length - 3} más
-                </Text>
-              )}
-            </Group>
+          return (
+            <Card key={order.id} shadow="xs" padding="md" withBorder radius="md">
+              <Flex
+                direction={{ base: 'column', sm: 'row' }}
+                justify="space-between"
+                align={{ base: 'stretch', sm: 'center' }}
+                gap="sm"
+              >
+                {/* Order info */}
+                <Box style={{ flex: 1, minWidth: 0 }}>
+                  <Group gap="xs" mb={4}>
+                    <Text fw={600} size="sm">
+                      #{order.id.slice(0, 8)}
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {new Date(order.createdAt).toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric',
+                      })}
+                    </Text>
+                  </Group>
+                  <Text size="xs" c="dimmed" lineClamp={1}>
+                    {itemCount} {itemCount === 1 ? 'producto' : 'productos'}
+                    {order.items.length > 0 && ` · ${order.items.map(i => i.product.name).slice(0, 2).join(', ')}${order.items.length > 2 ? '...' : ''}`}
+                  </Text>
+                </Box>
 
-            <Group justify="space-between">
-              <Text size="lg" fw={700}>
-                Total: ${Number(order.total).toFixed(2)}
-              </Text>
-              <Group gap="sm">
-                {order.status === 'PENDING' && (
-                  <Button
-                    variant="subtle"
-                    color="red"
+                {/* Status badges */}
+                <Group gap="xs" wrap="nowrap">
+                  <Badge
+                    color={status.color}
+                    variant="light"
                     size="sm"
-                    onClick={() => handleCancelClick(order)}
+                    leftSection={status.icon}
                   >
-                    Cancelar
+                    {status.label}
+                  </Badge>
+                  <Badge
+                    color={payment.color}
+                    variant={order.paymentStatus === 'APPROVED' ? 'filled' : 'outline'}
+                    size="sm"
+                    leftSection={payment.icon}
+                  >
+                    {payment.label}
+                  </Badge>
+                </Group>
+
+                {/* Total */}
+                <Text fw={700} size="md" style={{ minWidth: 90, textAlign: 'right' }}>
+                  ${Number(order.total).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                </Text>
+
+                {/* Actions */}
+                <Group gap="xs" wrap="nowrap">
+                  {canPay && (
+                    <Button
+                      size="xs"
+                      color="green"
+                      leftSection={<IconCreditCard size={14} />}
+                      onClick={() => handlePay(order.id)}
+                      loading={payingOrderId === order.id && createPreferenceMutation.isPending}
+                      disabled={createPreferenceMutation.isPending && payingOrderId !== order.id}
+                    >
+                      Pagar
+                    </Button>
+                  )}
+                  {canCancel && (
+                    <Button
+                      size="xs"
+                      variant="subtle"
+                      color="red"
+                      onClick={() => handleCancelClick(order)}
+                    >
+                      Cancelar
+                    </Button>
+                  )}
+                  <Button
+                    component={Link}
+                    href={`/orders/${order.id}`}
+                    size="xs"
+                    variant="light"
+                    leftSection={<IconEye size={14} />}
+                  >
+                    Ver
                   </Button>
-                )}
-                <Button
-                  component={Link}
-                  href={`/orders/${order.id}`}
-                  variant="light"
-                  size="sm"
-                  leftSection={<IconEye size={16} />}
-                >
-                  Ver detalles
-                </Button>
-              </Group>
-            </Group>
-          </Card>
-        ))}
+                </Group>
+              </Flex>
+            </Card>
+          );
+        })}
       </Stack>
 
       {data.meta.totalPages > 1 && (
@@ -207,6 +260,7 @@ export default function OrdersPage() {
             value={page}
             onChange={setPage}
             total={data.meta.totalPages}
+            size="sm"
           />
         </Group>
       )}
@@ -217,6 +271,7 @@ export default function OrdersPage() {
         onClose={closeCancel}
         title="Cancelar pedido"
         centered
+        size="sm"
       >
         <Text mb="lg">
           ¿Estás seguro de que deseas cancelar el pedido{' '}

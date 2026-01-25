@@ -1,6 +1,6 @@
 'use client';
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, useInfiniteQuery } from '@tanstack/react-query';
 import { notifications } from '@mantine/notifications';
 import {
   productsApi,
@@ -14,6 +14,7 @@ export const productsKeys = {
   all: ['products'] as const,
   lists: () => [...productsKeys.all, 'list'] as const,
   list: (params: ProductsQueryParams) => [...productsKeys.lists(), params] as const,
+  infinite: (params: Omit<ProductsQueryParams, 'page'>) => [...productsKeys.all, 'infinite', params] as const,
   adminLists: () => [...productsKeys.all, 'admin-list'] as const,
   adminList: (params: ProductsQueryParams) => [...productsKeys.adminLists(), params] as const,
   details: () => [...productsKeys.all, 'detail'] as const,
@@ -25,6 +26,23 @@ export function useProducts(params?: ProductsQueryParams) {
   return useQuery({
     queryKey: productsKeys.list(params || {}),
     queryFn: () => productsApi.getAll(params),
+  });
+}
+
+// Infinite scroll hook
+export function useInfiniteProducts(params?: Omit<ProductsQueryParams, 'page'>) {
+  const limit = params?.limit || 12;
+
+  return useInfiniteQuery({
+    queryKey: productsKeys.infinite(params || {}),
+    queryFn: ({ pageParam = 1 }) => productsApi.getAll({ ...params, page: pageParam, limit }),
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      const { page, totalPages } = lastPage.meta;
+      return page < totalPages ? page + 1 : undefined;
+    },
+    // Prefetch de la siguiente página
+    staleTime: 60 * 1000, // 1 minuto
   });
 }
 

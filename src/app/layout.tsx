@@ -12,6 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const description = config?.general?.storeDescription || 'Encuentra los mejores productos con envío rápido, devoluciones gratuitas y pago seguro.';
 
   return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'),
     title: {
       default: `${storeName} - Tu tienda online de confianza`,
       template: `%s | ${storeName}`,

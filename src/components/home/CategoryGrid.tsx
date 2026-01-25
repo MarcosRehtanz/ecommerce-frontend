@@ -25,8 +25,14 @@ const defaultImages: Record<string, string> = {
   belleza: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600',
 };
 
-export function CategoryGrid() {
-  const { data: categories, isLoading } = useCategories();
+interface CategoryGridProps {
+  initialCategories?: { id: string; name: string; slug: string; description?: string; imageData?: string; imageUrl?: string; _count?: { products: number } }[];
+}
+
+export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
+  // Usar datos iniciales del servidor
+  const categories = initialCategories;
+  const isLoading = false;
 
   if (isLoading) {
     return (

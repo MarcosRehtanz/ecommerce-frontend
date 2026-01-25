@@ -18,11 +18,12 @@ import {
   Center,
   Alert,
 } from '@mantine/core';
-import { IconShoppingCart, IconAlertCircle, IconCheck } from '@tabler/icons-react';
+import { IconShoppingCart, IconAlertCircle, IconCreditCard } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { useCreateOrder } from '@/hooks/useOrders';
+import { useCreatePreference } from '@/hooks/usePayments';
 import { useAuthStore } from '@/stores/authStore';
 
 export default function CheckoutPage() {
@@ -31,27 +32,48 @@ export default function CheckoutPage() {
   const hasHydrated = useAuthStore((state) => state._hasHydrated);
   const { items, totalItems, totalPrice, isLoading: isLoadingCart } = useUnifiedCart();
   const createOrderMutation = useCreateOrder();
+  const createPreferenceMutation = useCreatePreference();
 
   const [shippingAddress, setShippingAddress] = useState('');
   const [notes, setNotes] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleSubmit = async () => {
+  const handlePayWithMercadoPago = async () => {
     if (!isAuthenticated) {
       router.push('/login?redirect=/checkout');
       return;
     }
 
-    createOrderMutation.mutate(
-      {
+    setIsProcessing(true);
+
+    try {
+      // Step 1: Create order from cart
+      const order = await createOrderMutation.mutateAsync({
         shippingAddress: shippingAddress || undefined,
         notes: notes || undefined,
-      },
-      {
-        onSuccess: (order) => {
-          router.push(`/orders/${order.id}?success=true`);
-        },
+      });
+
+      // Step 2: Create Mercado Pago preference
+      const preference = await createPreferenceMutation.mutateAsync({
+        orderId: order.id,
+      });
+
+      // Step 3: Redirect to Mercado Pago
+      // Use sandbox URL when NEXT_PUBLIC_MP_SANDBOX is "true"
+      const useSandbox = process.env.NEXT_PUBLIC_MP_SANDBOX === 'true';
+      const redirectUrl = useSandbox
+        ? preference.sandboxInitPoint
+        : preference.initPoint;
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      } else {
+        throw new Error('No se pudo obtener la URL de pago');
       }
-    );
+    } catch (error) {
+      console.error('Error processing payment:', error);
+      setIsProcessing(false);
+    }
   };
 
   // Wait for hydration before checking auth
@@ -70,13 +92,13 @@ export default function CheckoutPage() {
       <Container size="md" py="xl">
         <Stack align="center" gap="lg" mt={50}>
           <IconAlertCircle size={80} color="orange" />
-          <Title order={2}>Inicia sesión para continuar</Title>
+          <Title order={2}>Inicia sesion para continuar</Title>
           <Text c="dimmed">
-            Necesitas iniciar sesión para completar tu compra
+            Necesitas iniciar sesion para completar tu compra
           </Text>
           <Group>
             <Button component={Link} href="/login?redirect=/checkout" size="lg">
-              Iniciar sesión
+              Iniciar sesion
             </Button>
             <Button component={Link} href="/register" variant="outline" size="lg">
               Registrarse
@@ -92,7 +114,7 @@ export default function CheckoutPage() {
       <Container size="md" py="xl">
         <Stack align="center" gap="lg" mt={50}>
           <IconShoppingCart size={80} color="gray" />
-          <Title order={2}>Tu carrito está vacío</Title>
+          <Title order={2}>Tu carrito esta vacio</Title>
           <Text c="dimmed">
             Agrega productos a tu carrito antes de continuar
           </Text>
@@ -103,6 +125,9 @@ export default function CheckoutPage() {
       </Container>
     );
   }
+
+  const isLoading = isProcessing || createOrderMutation.isPending || createPreferenceMutation.isPending;
+  const error = createOrderMutation.error || createPreferenceMutation.error;
 
   return (
     <Container size="lg" py="xl">
@@ -116,14 +141,15 @@ export default function CheckoutPage() {
           {/* Shipping Info */}
           <Paper shadow="sm" p="lg" withBorder>
             <Title order={3} mb="md">
-              Información de Envío
+              Informacion de Envio
             </Title>
             <Stack gap="md">
               <TextInput
-                label="Dirección de envío"
-                placeholder="Calle 123, Ciudad, País"
+                label="Direccion de envio"
+                placeholder="Calle 123, Ciudad, Pais"
                 value={shippingAddress}
                 onChange={(e) => setShippingAddress(e.target.value)}
+                disabled={isLoading}
               />
               <Textarea
                 label="Notas adicionales"
@@ -131,6 +157,7 @@ export default function CheckoutPage() {
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 minRows={3}
+                disabled={isLoading}
               />
             </Stack>
           </Paper>
@@ -168,6 +195,30 @@ export default function CheckoutPage() {
               ))}
             </Stack>
           </Paper>
+
+          {/* Payment Methods Info */}
+          <Paper shadow="sm" p="lg" withBorder bg="blue.0">
+            <Stack gap="sm">
+              <Group>
+                <IconCreditCard size={24} color="var(--mantine-color-blue-6)" />
+                <Text fw={600} c="blue.8">
+                  Metodos de Pago Disponibles
+                </Text>
+              </Group>
+              <Text size="sm" c="dimmed">
+                A traves de Mercado Pago podras pagar con:
+              </Text>
+              <Group gap="xs">
+                <Text size="sm">- Tarjetas de credito y debito</Text>
+              </Group>
+              <Group gap="xs">
+                <Text size="sm">- Transferencia bancaria</Text>
+              </Group>
+              <Group gap="xs">
+                <Text size="sm">- Efectivo en Rapipago o Pago Facil</Text>
+              </Group>
+            </Stack>
+          </Paper>
         </Stack>
 
         {/* Order Summary */}
@@ -183,7 +234,7 @@ export default function CheckoutPage() {
             </Group>
 
             <Group justify="space-between">
-              <Text>Envío</Text>
+              <Text>Envio</Text>
               <Text c="green" fw={500}>
                 Gratis
               </Text>
@@ -200,27 +251,33 @@ export default function CheckoutPage() {
               </Text>
             </Group>
 
-            {createOrderMutation.isError && (
+            {error && (
               <Alert color="red" icon={<IconAlertCircle size={16} />}>
-                {createOrderMutation.error?.message || 'Error al crear el pedido'}
+                {error?.message || 'Error al procesar el pago'}
               </Alert>
             )}
 
             <Button
               size="lg"
               fullWidth
-              onClick={handleSubmit}
-              loading={createOrderMutation.isPending}
-              leftSection={<IconCheck size={20} />}
+              onClick={handlePayWithMercadoPago}
+              loading={isLoading}
+              leftSection={<IconCreditCard size={20} />}
+              color="blue"
             >
-              Confirmar Pedido
+              Pagar con Mercado Pago
             </Button>
+
+            <Text size="xs" c="dimmed" ta="center">
+              Seras redirigido a Mercado Pago para completar el pago de forma segura.
+            </Text>
 
             <Button
               component={Link}
               href="/cart"
               variant="subtle"
               fullWidth
+              disabled={isLoading}
             >
               Volver al carrito
             </Button>

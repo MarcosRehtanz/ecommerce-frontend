@@ -38,14 +38,15 @@ export default function ProductDetailClient({ initialProduct }: ProductDetailCli
 
   const handleAddToCart = () => {
     if (!product) return;
-    for (let i = 0; i < quantity; i++) {
-      addItem({
+    addItem(
+      {
         productId: product.id,
         name: product.name,
         price: Number(product.price),
         imageUrl: getProductImageSrc(product.imageData, product.imageUrl),
-      });
-    }
+      },
+      quantity
+    );
   };
 
   if (isLoading) {

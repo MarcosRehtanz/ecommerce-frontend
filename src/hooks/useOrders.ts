@@ -45,12 +45,8 @@ export function useCreateOrder() {
     mutationFn: (data: CreateOrderRequest = {}) => ordersApi.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: orderKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: ['cart'] });
-      notifications.show({
-        title: 'Pedido creado',
-        message: 'Tu pedido ha sido creado exitosamente',
-        color: 'green',
-      });
+      // Note: Cart is NOT invalidated here because it's cleared after payment confirmation
+      // Note: No notification shown here - the checkout page handles the flow
     },
     onError: (error: Error) => {
       notifications.show({

@@ -7,16 +7,15 @@ import {
   Group,
   Anchor,
   Card,
-  Image,
   Badge,
   Button,
   Box,
   Skeleton,
 } from '@mantine/core';
 import { Carousel } from '@mantine/carousel';
+import Image from 'next/image';
 import Link from 'next/link';
 import { IconArrowRight, IconShoppingCart } from '@tabler/icons-react';
-import { useProducts } from '@/hooks/useProducts';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { getProductImageSrc } from '@/utils/image';
 import { Product } from '@/types';
@@ -25,11 +24,11 @@ interface ProductCarouselProps {
   title: string;
   subtitle?: string;
   viewAllLink?: string;
-  queryParams?: Record<string, unknown>;
+  initialProducts?: Product[];
 }
 
 function ProductCard({ product }: { product: Product }) {
-  const { addItem, isAdding } = useUnifiedCart();
+  const { addItem } = useUnifiedCart();
 
   const handleAddToCart = () => {
     addItem({
@@ -45,22 +44,27 @@ function ProductCard({ product }: { product: Product }) {
     ? Math.round((1 - Number(product.price) / Number(product.originalPrice)) * 100)
     : 0;
 
+  const imageSrc = getProductImageSrc(product.imageData, product.imageUrl, 'https://placehold.co/300x300?text=Producto');
+  const isBase64 = imageSrc?.startsWith('data:');
+
   return (
     <Card shadow="sm" padding="sm" radius="md" withBorder h="100%" style={{ display: 'flex', flexDirection: 'column' }}>
-      <Card.Section pos="relative">
+      <Card.Section pos="relative" style={{ height: 200 }}>
         <Image
-          src={getProductImageSrc(product.imageData, product.imageUrl, 'https://placehold.co/300x300?text=Producto')}
-          height={200}
+          src={imageSrc}
           alt={product.name}
-          fallbackSrc="https://placehold.co/300x300?text=Producto"
+          fill
+          sizes="(max-width: 768px) 100vw, 280px"
+          style={{ objectFit: 'cover' }}
+          unoptimized={isBase64}
         />
         {product.stock < 5 && product.stock > 0 && (
-          <Badge pos="absolute" top={10} left={10} color="orange">
+          <Badge pos="absolute" top={10} left={10} color="orange" style={{ zIndex: 2 }}>
             Últimas unidades
           </Badge>
         )}
         {hasDiscount && (
-          <Badge pos="absolute" top={10} left={10} color="red">
+          <Badge pos="absolute" top={10} left={product.stock < 5 && product.stock > 0 ? 'auto' : 10} right={product.stock < 5 && product.stock > 0 ? 10 : 'auto'} color="red" style={{ zIndex: 2 }}>
             -{discountPercent}%
           </Badge>
         )}
@@ -93,7 +97,6 @@ function ProductCard({ product }: { product: Product }) {
           radius="md"
           leftSection={<IconShoppingCart size={18} />}
           onClick={handleAddToCart}
-          loading={isAdding}
           disabled={product.stock === 0}
           style={{ marginTop: 'auto' }}
         >
@@ -108,10 +111,11 @@ export function ProductCarousel({
   title,
   subtitle,
   viewAllLink = '/products',
-  queryParams = {},
+  initialProducts = [],
 }: ProductCarouselProps) {
-  const { data, isLoading } = useProducts({ limit: 10, ...queryParams });
-  const products = data?.data || [];
+  // Usar datos iniciales del servidor directamente
+  const products = initialProducts;
+  const isLoading = false; // Los datos ya vienen del servidor
 
   return (
     <Box py="xl">

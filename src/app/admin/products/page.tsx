@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 import {
   Container,
   Title,
@@ -18,6 +19,8 @@ import {
   Skeleton,
   Modal,
   Image,
+  Loader,
+  Center,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -35,8 +38,20 @@ import {
 } from '@tanstack/react-table';
 import { useProductsAdmin, useDeleteProduct } from '@/hooks/useProducts';
 import { Product } from '@/types';
-import { ProductFormModal } from './ProductFormModal';
 import { getProductImageSrc } from '@/utils/image';
+
+// Lazy load del modal de formulario (no se necesita hasta que el usuario hace clic)
+const ProductFormModal = dynamic(
+  () => import('./ProductFormModal').then((mod) => mod.ProductFormModal),
+  {
+    loading: () => (
+      <Center p="xl">
+        <Loader />
+      </Center>
+    ),
+    ssr: false,
+  }
+);
 
 const columnHelper = createColumnHelper<Product>();
 

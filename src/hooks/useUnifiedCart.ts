@@ -73,13 +73,13 @@ export function useUnifiedCart() {
 
   // Add item to cart
   const addItem = useCallback(
-    (item: Omit<LocalCartItem, 'quantity'>) => {
+    (item: Omit<LocalCartItem, 'quantity'>, quantity: number = 1) => {
       // Always update local state first (optimistic)
-      localAddItem(item);
+      localAddItem(item, quantity);
 
       if (isAuthenticated) {
         addToCartMutation.mutate(
-          { productId: item.productId, quantity: 1 },
+          { productId: item.productId, quantity },
           {
             onError: () => {
               // Revert on error
@@ -91,7 +91,9 @@ export function useUnifiedCart() {
 
       notifications.show({
         title: 'Producto agregado',
-        message: `${item.name} se agregó al carrito`,
+        message: quantity > 1
+          ? `${item.name} (x${quantity}) se agregó al carrito`
+          : `${item.name} se agregó al carrito`,
         color: 'green',
       });
     },

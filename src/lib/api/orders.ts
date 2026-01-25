@@ -2,6 +2,7 @@ import api from './axios';
 import { PaginatedResponse, PaginationParams } from '@/types';
 
 export type OrderStatus = 'PENDING' | 'CONFIRMED' | 'SHIPPED' | 'DELIVERED' | 'CANCELLED';
+export type PaymentStatus = 'PENDING' | 'APPROVED' | 'REJECTED' | 'CANCELLED';
 
 export interface OrderProduct {
   id: string;
@@ -28,6 +29,9 @@ export interface Order {
   id: string;
   userId: string;
   status: OrderStatus;
+  paymentStatus: PaymentStatus;
+  paymentId?: string | null;
+  mercadoPagoId?: string | null;
   total: number;
   items: OrderItem[];
   user?: OrderUser;
@@ -57,6 +61,10 @@ export interface OrderStats {
     shipped: number;
     delivered: number;
     cancelled: number;
+  };
+  byPayment: {
+    pending: number;
+    approved: number;
   };
   totalRevenue: number;
 }

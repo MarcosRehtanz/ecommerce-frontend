@@ -28,11 +28,13 @@ import {
   IconArrowLeft,
   IconConfetti,
   IconRefresh,
+  IconCreditCard,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useMyOrder, useCancelOrder } from '@/hooks/useOrders';
-import { OrderStatus } from '@/lib/api/orders';
+import { useCreatePreference } from '@/hooks/usePayments';
+import { OrderStatus, PaymentStatus } from '@/lib/api/orders';
 import { getProductImageSrc } from '@/utils/image';
 
 const statusColors: Record<OrderStatus, string> = {
@@ -59,6 +61,20 @@ const statusDescriptions: Record<OrderStatus, string> = {
   CANCELLED: 'Este pedido fue cancelado',
 };
 
+const paymentStatusColors: Record<PaymentStatus, string> = {
+  PENDING: 'yellow',
+  APPROVED: 'green',
+  REJECTED: 'red',
+  CANCELLED: 'gray',
+};
+
+const paymentStatusLabels: Record<PaymentStatus, string> = {
+  PENDING: 'Pendiente',
+  APPROVED: 'Aprobado',
+  REJECTED: 'Rechazado',
+  CANCELLED: 'Cancelado',
+};
+
 interface PageProps {
   params: { id: string };
 }
@@ -71,6 +87,29 @@ export default function OrderDetailPage({ params }: PageProps) {
 
   const { data: order, isLoading, error, refetch, isFetching } = useMyOrder(params.id);
   const cancelOrderMutation = useCancelOrder();
+  const createPreferenceMutation = useCreatePreference();
+
+  const handleRetryPayment = async () => {
+    if (!order) return;
+
+    try {
+      const preference = await createPreferenceMutation.mutateAsync({
+        orderId: order.id,
+      });
+
+      // Redirect to MercadoPago
+      const useSandbox = process.env.NEXT_PUBLIC_MP_SANDBOX === 'true';
+      const redirectUrl = useSandbox
+        ? preference.sandboxInitPoint
+        : preference.initPoint;
+
+      if (redirectUrl) {
+        window.location.href = redirectUrl;
+      }
+    } catch (error) {
+      console.error('Error retrying payment:', error);
+    }
+  };
 
   const confirmCancel = () => {
     if (order) {
@@ -273,6 +312,13 @@ export default function OrderDetailPage({ params }: PageProps) {
             </Group>
 
             <Group justify="space-between">
+              <Text c="dimmed">Estado de pago</Text>
+              <Badge color={paymentStatusColors[order.paymentStatus]}>
+                {paymentStatusLabels[order.paymentStatus]}
+              </Badge>
+            </Group>
+
+            <Group justify="space-between">
               <Text c="dimmed">Productos</Text>
               <Text fw={500}>{order.items.length}</Text>
             </Group>
@@ -298,12 +344,27 @@ export default function OrderDetailPage({ params }: PageProps) {
               </Text>
             </Group>
 
+            {/* Retry payment button - show when payment is pending or rejected */}
+            {order.status === 'PENDING' &&
+             (order.paymentStatus === 'PENDING' || order.paymentStatus === 'REJECTED') && (
+              <Button
+                color="blue"
+                fullWidth
+                mt="md"
+                leftSection={<IconCreditCard size={18} />}
+                onClick={handleRetryPayment}
+                loading={createPreferenceMutation.isPending}
+              >
+                {order.paymentStatus === 'REJECTED' ? 'Reintentar pago' : 'Pagar ahora'}
+              </Button>
+            )}
+
             {order.status === 'PENDING' && (
               <Button
                 color="red"
                 variant="light"
                 fullWidth
-                mt="md"
+                mt="xs"
                 onClick={openCancel}
               >
                 Cancelar pedido
@@ -315,7 +376,7 @@ export default function OrderDetailPage({ params }: PageProps) {
               href="/products"
               variant="light"
               fullWidth
-              mt={order.status === 'PENDING' ? 'xs' : 'md'}
+              mt="xs"
             >
               Seguir comprando
             </Button>

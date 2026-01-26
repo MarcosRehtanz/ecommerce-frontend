@@ -56,7 +56,7 @@ export interface CreateProductDto {
   imageData?: string;
 }
 
-export interface UpdateProductDto extends Partial<CreateProductDto> {
+export interface UpdateProductDto extends Partial<Omit<CreateProductDto, 'imageData'>> {
   isActive?: boolean;
   imageData?: string | null;
 }

@@ -15,9 +15,9 @@ interface UseIntersectionObserverOptions {
  */
 export function useIntersectionObserver<T extends HTMLElement = HTMLDivElement>(
   options: UseIntersectionObserverOptions = {}
-): { ref: RefObject<T | null>; isIntersecting: boolean } {
+): { ref: RefObject<T>; isIntersecting: boolean } {
   const { threshold = 0.1, root = null, rootMargin = '100px', enabled = true } = options;
-  const ref = useRef<T | null>(null);
+  const ref = useRef<T>(null);
   const [isIntersecting, setIsIntersecting] = useState(false);
 
   useEffect(() => {

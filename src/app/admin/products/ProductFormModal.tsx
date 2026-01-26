@@ -16,7 +16,7 @@ import {
   Paper,
   Select,
 } from '@mantine/core';
-import { Dropzone, IMAGE_MIME_TYPE } from '@mantine/dropzone';
+import { Dropzone, IMAGE_MIME_TYPE, type FileRejection } from '@mantine/dropzone';
 import { notifications } from '@mantine/notifications';
 import { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -143,7 +143,7 @@ export function ProductFormModal({ opened, onClose, product }: ProductFormModalP
     setImageChanged(true);
   };
 
-  const handleReject = (fileRejections: { file: File; errors: { code: string }[] }[]) => {
+  const handleReject = (fileRejections: FileRejection[]) => {
     const rejection = fileRejections[0];
     if (!rejection) return;
 

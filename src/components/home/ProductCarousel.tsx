@@ -147,7 +147,7 @@ export function ProductCarousel({
             slideSize={{ base: '100%', xs: '50%', sm: '33.333333%', md: '25%' }}
             slideGap="md"
             align="start"
-            slidesToScroll={{ base: 1, xs: 1, sm: 2, md: 3 }}
+            slidesToScroll={1}
             withControls
             loop={products.length > 4}
             styles={{

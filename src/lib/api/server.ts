@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { HomepageConfig, Product } from '@/types';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
@@ -19,7 +20,8 @@ export async function fetchHomepageConfig(): Promise<HomepageConfig | null> {
   }
 }
 
-export async function fetchProduct(id: string): Promise<Product | null> {
+// Cached to deduplicate calls in generateMetadata and page component
+export const fetchProduct = cache(async (id: string): Promise<Product | null> => {
   try {
     const res = await fetch(`${API_URL}/products/${id}`, {
       next: { revalidate: 60 }, // Cache for 1 minute
@@ -29,7 +31,7 @@ export async function fetchProduct(id: string): Promise<Product | null> {
   } catch {
     return null;
   }
-}
+});
 
 export interface ProductsResponse {
   data: Product[];

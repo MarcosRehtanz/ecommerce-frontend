@@ -198,7 +198,7 @@ function TopBarForm({ configs }: { configs: SiteConfig[] | undefined }) {
     <Stack>
       <TextInput
         label="Mensaje"
-        placeholder="Envío gratis en pedidos mayores a $999"
+        placeholder="Envío gratis en pedidos mayores a $50.000"
         value={message}
         onChange={(e) => setMessage(e.target.value)}
       />

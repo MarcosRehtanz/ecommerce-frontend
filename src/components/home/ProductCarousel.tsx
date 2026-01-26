@@ -84,11 +84,11 @@ function ProductCard({ product }: { product: Product }) {
         <Group mt="xs" gap="xs">
           {hasDiscount && (
             <Text td="line-through" c="dimmed" size="sm">
-              ${Number(product.originalPrice).toFixed(2)}
+              ${Number(product.originalPrice).toLocaleString('es-AR')}
             </Text>
           )}
           <Text fw={700} c="blue" size="lg">
-            ${Number(product.price).toFixed(2)}
+            ${Number(product.price).toLocaleString('es-AR')}
           </Text>
         </Group>
 

@@ -73,11 +73,11 @@ function ProductCard({ product, onAddToCart }: { product: Product; onAddToCart: 
           <Stack gap={0}>
             {product.originalPrice && Number(product.originalPrice) > Number(product.price) && (
               <Text size="sm" td="line-through" c="dimmed">
-                ${Number(product.originalPrice).toFixed(2)}
+                ${Number(product.originalPrice).toLocaleString('es-AR')}
               </Text>
             )}
             <Text size="xl" fw={700} c="blue">
-              ${Number(product.price).toFixed(2)}
+              ${Number(product.price).toLocaleString('es-AR')}
             </Text>
           </Stack>
           <Button

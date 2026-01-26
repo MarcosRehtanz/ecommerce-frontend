@@ -244,7 +244,7 @@ export default function AdminOrdersPage() {
                   Ingresos Totales
                 </Text>
                 <Text size="xl" fw={700} c="green">
-                  ${Number(stats.totalRevenue).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                  ${Number(stats.totalRevenue).toLocaleString('es-AR')}
                 </Text>
               </div>
               <IconCurrencyDollar size={32} color="green" />
@@ -350,7 +350,7 @@ export default function AdminOrdersPage() {
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm" fw={500}>
-                        ${Number(order.total).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                        ${Number(order.total).toLocaleString('es-AR')}
                       </Text>
                     </Table.Td>
                     <Table.Td>
@@ -486,8 +486,8 @@ export default function AdminOrdersPage() {
                       </Group>
                     </Table.Td>
                     <Table.Td>{item.quantity}</Table.Td>
-                    <Table.Td>${Number(item.price).toFixed(2)}</Table.Td>
-                    <Table.Td>${(Number(item.price) * item.quantity).toFixed(2)}</Table.Td>
+                    <Table.Td>${Number(item.price).toLocaleString('es-AR')}</Table.Td>
+                    <Table.Td>${(Number(item.price) * item.quantity).toLocaleString('es-AR')}</Table.Td>
                   </Table.Tr>
                 ))}
               </Table.Tbody>
@@ -495,7 +495,7 @@ export default function AdminOrdersPage() {
 
             <Group justify="flex-end">
               <Text size="xl" fw={700}>
-                Total: ${Number(selectedOrder.total).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                Total: ${Number(selectedOrder.total).toLocaleString('es-AR')}
               </Text>
             </Group>
 

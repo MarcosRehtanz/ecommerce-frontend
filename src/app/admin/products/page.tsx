@@ -121,7 +121,7 @@ export default function AdminProductsPage() {
     }),
     columnHelper.accessor('price', {
       header: 'Precio',
-      cell: (info) => `$${Number(info.getValue()).toFixed(2)}`,
+      cell: (info) => `$${Number(info.getValue()).toLocaleString('es-AR')}`,
     }),
     columnHelper.accessor('stock', {
       header: 'Stock',

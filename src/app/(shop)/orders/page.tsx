@@ -211,7 +211,7 @@ export default function OrdersPage() {
 
                 {/* Total */}
                 <Text fw={700} size="md" style={{ minWidth: 90, textAlign: 'right' }}>
-                  ${Number(order.total).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                  ${Number(order.total).toLocaleString('es-AR')}
                 </Text>
 
                 {/* Actions */}

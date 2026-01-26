@@ -85,7 +85,7 @@ export default function CartPage() {
                   <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
                     <Text fw={500} lineClamp={1}>{item.name}</Text>
                     <Text size="lg" fw={700} c="blue">
-                      ${Number(item.price).toFixed(2)}
+                      ${Number(item.price).toLocaleString('es-AR')}
                     </Text>
                   </Stack>
                   <Group gap="sm" wrap="nowrap">
@@ -131,7 +131,7 @@ export default function CartPage() {
 
               <Group justify="space-between">
                 <Text>Subtotal ({totalItems} productos)</Text>
-                <Text fw={500}>${totalPrice.toFixed(2)}</Text>
+                <Text fw={500}>${totalPrice.toLocaleString('es-AR')}</Text>
               </Group>
 
               <Group justify="space-between">
@@ -148,7 +148,7 @@ export default function CartPage() {
                   Total
                 </Text>
                 <Text size="xl" fw={700} c="blue">
-                  ${totalPrice.toFixed(2)}
+                  ${totalPrice.toLocaleString('es-AR')}
                 </Text>
               </Group>
 

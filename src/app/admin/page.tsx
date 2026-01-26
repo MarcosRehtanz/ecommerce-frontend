@@ -185,7 +185,7 @@ export default function AdminDashboard() {
                   Ingresos
                 </Text>
                 <Text size="xl" fw={700}>
-                  ${stats.revenue.total.toFixed(2)}
+                  ${stats.revenue.total.toLocaleString('es-AR')}
                 </Text>
                 <Text size="xs" c="dimmed">
                   total ventas
@@ -253,7 +253,7 @@ export default function AdminDashboard() {
                 <Group justify="center" mt="md" gap="xl">
                   <div style={{ textAlign: 'center' }}>
                     <Text size="xs" c="dimmed">Total Ventas</Text>
-                    <Text fw={700}>${salesData.summary.totalSales.toFixed(2)}</Text>
+                    <Text fw={700}>${salesData.summary.totalSales.toLocaleString('es-AR')}</Text>
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <Text size="xs" c="dimmed">Total Pedidos</Text>
@@ -261,7 +261,7 @@ export default function AdminDashboard() {
                   </div>
                   <div style={{ textAlign: 'center' }}>
                     <Text size="xs" c="dimmed">Promedio</Text>
-                    <Text fw={700}>${salesData.summary.averageOrderValue.toFixed(2)}</Text>
+                    <Text fw={700}>${salesData.summary.averageOrderValue.toLocaleString('es-AR')}</Text>
                   </div>
                 </Group>
               )}
@@ -346,7 +346,7 @@ export default function AdminDashboard() {
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm" fw={500}>
-                        ${product.totalRevenue.toFixed(2)}
+                        ${product.totalRevenue.toLocaleString('es-AR')}
                       </Text>
                     </Table.Td>
                   </Table.Tr>
@@ -402,7 +402,7 @@ export default function AdminDashboard() {
                     </Table.Td>
                     <Table.Td>
                       <Text size="sm" fw={500}>
-                        ${Number(order.total).toFixed(2)}
+                        ${Number(order.total).toLocaleString('es-AR')}
                       </Text>
                     </Table.Td>
                   </Table.Tr>

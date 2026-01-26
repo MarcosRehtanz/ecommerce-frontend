@@ -191,7 +191,7 @@ export default function CheckoutPage() {
                     </div>
                   </Group>
                   <Text fw={500}>
-                    ${(Number(item.price) * item.quantity).toFixed(2)}
+                    ${(Number(item.price) * item.quantity).toLocaleString('es-AR')}
                   </Text>
                 </Group>
               ))}
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
 
             <Group justify="space-between">
               <Text>Subtotal</Text>
-              <Text fw={500}>${totalPrice.toFixed(2)}</Text>
+              <Text fw={500}>${totalPrice.toLocaleString('es-AR')}</Text>
             </Group>
 
             <Group justify="space-between">
@@ -251,7 +251,7 @@ export default function CheckoutPage() {
                 Total
               </Text>
               <Text size="xl" fw={700} c="blue">
-                ${totalPrice.toFixed(2)}
+                ${totalPrice.toLocaleString('es-AR')}
               </Text>
             </Group>
 

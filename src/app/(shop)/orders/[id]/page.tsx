@@ -231,8 +231,8 @@ export default function OrderDetailPage({ params }: PageProps) {
                       </Group>
                     </Table.Td>
                     <Table.Td>{item.quantity}</Table.Td>
-                    <Table.Td>${Number(item.price).toFixed(2)}</Table.Td>
-                    <Table.Td fw={500}>${(Number(item.price) * item.quantity).toFixed(2)}</Table.Td>
+                    <Table.Td>${Number(item.price).toLocaleString('es-AR')}</Table.Td>
+                    <Table.Td fw={500}>${(Number(item.price) * item.quantity).toLocaleString('es-AR')}</Table.Td>
                   </Table.Tr>
                 ))}
               </Table.Tbody>
@@ -333,7 +333,7 @@ export default function OrderDetailPage({ params }: PageProps) {
 
             <Group justify="space-between">
               <Text c="dimmed">Subtotal</Text>
-              <Text fw={500}>${Number(order.total).toFixed(2)}</Text>
+              <Text fw={500}>${Number(order.total).toLocaleString('es-AR')}</Text>
             </Group>
 
             <Group justify="space-between">
@@ -346,7 +346,7 @@ export default function OrderDetailPage({ params }: PageProps) {
             <Group justify="space-between">
               <Text size="lg" fw={700}>Total</Text>
               <Text size="xl" fw={700} c="blue">
-                ${Number(order.total).toFixed(2)}
+                ${Number(order.total).toLocaleString('es-AR')}
               </Text>
             </Group>
 

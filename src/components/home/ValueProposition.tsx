@@ -12,7 +12,7 @@ const benefits = [
   {
     icon: IconTruck,
     title: 'Envío Gratis',
-    description: 'En pedidos mayores a $999',
+    description: 'En pedidos mayores a $50.000',
     color: 'blue',
   },
   {

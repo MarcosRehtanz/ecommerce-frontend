@@ -145,17 +145,17 @@ export default function ProductDetailClient({ initialProduct }: ProductDetailCli
               <Box>
                 <Group gap="sm" align="baseline">
                   <Text fz={32} fw={700} c="blue">
-                    ${Number(product.price).toFixed(2)}
+                    ${Number(product.price).toLocaleString('es-AR')}
                   </Text>
                   {hasDiscount && (
                     <Text fz={20} td="line-through" c="dimmed">
-                      ${Number(product.originalPrice).toFixed(2)}
+                      ${Number(product.originalPrice).toLocaleString('es-AR')}
                     </Text>
                   )}
                 </Group>
                 {hasDiscount && (
                   <Text size="sm" c="green" fw={500}>
-                    Ahorras ${(Number(product.originalPrice) - Number(product.price)).toFixed(2)}
+                    Ahorras ${(Number(product.originalPrice) - Number(product.price)).toLocaleString('es-AR')}
                   </Text>
                 )}
               </Box>

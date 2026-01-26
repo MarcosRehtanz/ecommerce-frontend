@@ -1,3 +1,5 @@
+'use client';
+
 import { Container, Skeleton, Stack, Group } from '@mantine/core';
 
 export default function AdminLoading() {

@@ -34,13 +34,13 @@ export default function ProductsLoading() {
 
         {/* Filtros reales con valores del URL */}
         <Paper shadow="xs" p="md" withBorder>
-          <Group align="flex-end" wrap="wrap">
+          <Group align="flex-end" wrap="wrap" grow>
             <TextInput
               placeholder="Buscar productos..."
               leftSection={<IconSearch size={16} />}
               value={search}
               readOnly
-              style={{ flex: 1, minWidth: 200, maxWidth: 300 }}
+              style={{ minWidth: 180 }}
             />
             <NumberInput
               placeholder="Min"
@@ -49,7 +49,7 @@ export default function ProductsLoading() {
               min={0}
               value={minPrice ? Number(minPrice) : ''}
               readOnly
-              style={{ width: 120 }}
+              style={{ minWidth: 100 }}
             />
             <NumberInput
               placeholder="Max"
@@ -58,7 +58,7 @@ export default function ProductsLoading() {
               min={0}
               value={maxPrice ? Number(maxPrice) : ''}
               readOnly
-              style={{ width: 120 }}
+              style={{ minWidth: 100 }}
             />
             <Select
               label="Categoría"
@@ -66,7 +66,7 @@ export default function ProductsLoading() {
               value={null}
               data={[]}
               disabled
-              style={{ width: 160 }}
+              style={{ minWidth: 140 }}
             />
             <Select
               label="Ordenar por"
@@ -77,7 +77,7 @@ export default function ProductsLoading() {
                 { value: 'price', label: 'Precio' },
               ]}
               readOnly
-              style={{ width: 150 }}
+              style={{ minWidth: 130 }}
             />
             <Select
               label="Orden"
@@ -87,7 +87,7 @@ export default function ProductsLoading() {
                 { value: 'desc', label: 'Descendente' },
               ]}
               readOnly
-              style={{ width: 130 }}
+              style={{ minWidth: 110 }}
             />
           </Group>
         </Paper>

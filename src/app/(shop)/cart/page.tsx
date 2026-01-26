@@ -15,6 +15,7 @@ import {
   Paper,
   Loader,
   Center,
+  Grid,
 } from '@mantine/core';
 import { IconTrash, IconShoppingCart } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -66,100 +67,104 @@ export default function CartPage() {
         {isSyncing && <Loader size="sm" />}
       </Group>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 24 }}>
+      <Grid gutter="lg">
         {/* Cart Items */}
-        <Stack gap="md">
-          {items.map((item) => (
-            <Card key={item.productId} shadow="sm" padding="md" withBorder>
-              <Group wrap="nowrap">
-                <Image
-                  src={item.imageUrl}
-                  width={100}
-                  height={100}
-                  radius="md"
-                  alt={item.name}
-                  fallbackSrc="https://placehold.co/100x100?text=Producto"
-                />
-                <Stack gap="xs" style={{ flex: 1 }}>
-                  <Text fw={500}>{item.name}</Text>
-                  <Text size="lg" fw={700} c="blue">
-                    ${Number(item.price).toFixed(2)}
-                  </Text>
-                </Stack>
-                <Group gap="sm">
-                  <NumberInput
-                    value={item.quantity}
-                    onChange={(value) =>
-                      updateQuantity(item.productId, Number(value) || 1)
-                    }
-                    min={1}
-                    max={99}
-                    style={{ width: 80 }}
-                  />
-                  <ActionIcon
-                    color="red"
-                    variant="subtle"
-                    onClick={() => removeItem(item.productId)}
-                  >
-                    <IconTrash size={20} />
-                  </ActionIcon>
-                </Group>
-              </Group>
-            </Card>
-          ))}
-
-          <Button
-            variant="subtle"
-            color="red"
-            onClick={clearCart}
-            style={{ alignSelf: 'flex-start' }}
-          >
-            Vaciar carrito
-          </Button>
-        </Stack>
-
-        {/* Order Summary */}
-        <Paper shadow="sm" p="lg" withBorder>
+        <Grid.Col span={{ base: 12, md: 8 }}>
           <Stack gap="md">
-            <Title order={3}>Resumen del Pedido</Title>
-
-            <Divider />
-
-            <Group justify="space-between">
-              <Text>Subtotal ({totalItems} productos)</Text>
-              <Text fw={500}>${totalPrice.toFixed(2)}</Text>
-            </Group>
-
-            <Group justify="space-between">
-              <Text>Envío</Text>
-              <Text c="green" fw={500}>
-                Gratis
-              </Text>
-            </Group>
-
-            <Divider />
-
-            <Group justify="space-between">
-              <Text size="lg" fw={700}>
-                Total
-              </Text>
-              <Text size="xl" fw={700} c="blue">
-                ${totalPrice.toFixed(2)}
-              </Text>
-            </Group>
+            {items.map((item) => (
+              <Card key={item.productId} shadow="sm" padding="md" withBorder>
+                <Group wrap="nowrap">
+                  <Image
+                    src={item.imageUrl}
+                    width={80}
+                    height={80}
+                    radius="md"
+                    alt={item.name}
+                    fallbackSrc="https://placehold.co/80x80?text=Producto"
+                  />
+                  <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
+                    <Text fw={500} lineClamp={1}>{item.name}</Text>
+                    <Text size="lg" fw={700} c="blue">
+                      ${Number(item.price).toFixed(2)}
+                    </Text>
+                  </Stack>
+                  <Group gap="sm" wrap="nowrap">
+                    <NumberInput
+                      value={item.quantity}
+                      onChange={(value) =>
+                        updateQuantity(item.productId, Number(value) || 1)
+                      }
+                      min={1}
+                      max={99}
+                      style={{ width: 80 }}
+                    />
+                    <ActionIcon
+                      color="red"
+                      variant="subtle"
+                      onClick={() => removeItem(item.productId)}
+                    >
+                      <IconTrash size={20} />
+                    </ActionIcon>
+                  </Group>
+                </Group>
+              </Card>
+            ))}
 
             <Button
-              component={Link}
-              href="/checkout"
-              size="lg"
-              fullWidth
-              mt="md"
+              variant="subtle"
+              color="red"
+              onClick={clearCart}
+              style={{ alignSelf: 'flex-start' }}
             >
-              Proceder al Pago
+              Vaciar carrito
             </Button>
           </Stack>
-        </Paper>
-      </div>
+        </Grid.Col>
+
+        {/* Order Summary */}
+        <Grid.Col span={{ base: 12, md: 4 }}>
+          <Paper shadow="sm" p="lg" withBorder style={{ position: 'sticky', top: 20 }}>
+            <Stack gap="md">
+              <Title order={3}>Resumen del Pedido</Title>
+
+              <Divider />
+
+              <Group justify="space-between">
+                <Text>Subtotal ({totalItems} productos)</Text>
+                <Text fw={500}>${totalPrice.toFixed(2)}</Text>
+              </Group>
+
+              <Group justify="space-between">
+                <Text>Envío</Text>
+                <Text c="green" fw={500}>
+                  Gratis
+                </Text>
+              </Group>
+
+              <Divider />
+
+              <Group justify="space-between">
+                <Text size="lg" fw={700}>
+                  Total
+                </Text>
+                <Text size="xl" fw={700} c="blue">
+                  ${totalPrice.toFixed(2)}
+                </Text>
+              </Group>
+
+              <Button
+                component={Link}
+                href="/checkout"
+                size="lg"
+                fullWidth
+                mt="md"
+              >
+                Proceder al Pago
+              </Button>
+            </Stack>
+          </Paper>
+        </Grid.Col>
+      </Grid>
     </Container>
   );
 }

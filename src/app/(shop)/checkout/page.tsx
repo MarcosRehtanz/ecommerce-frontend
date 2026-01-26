@@ -17,6 +17,7 @@ import {
   Loader,
   Center,
   Alert,
+  Grid,
 } from '@mantine/core';
 import { IconShoppingCart, IconAlertCircle, IconCreditCard } from '@tabler/icons-react';
 import Link from 'next/link';
@@ -135,8 +136,9 @@ export default function CheckoutPage() {
         Finalizar Compra
       </Title>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 400px', gap: 24 }}>
+      <Grid gutter="lg">
         {/* Order Details */}
+        <Grid.Col span={{ base: 12, md: 7 }}>
         <Stack gap="lg">
           {/* Shipping Info */}
           <Paper shadow="sm" p="lg" withBorder>
@@ -220,9 +222,11 @@ export default function CheckoutPage() {
             </Stack>
           </Paper>
         </Stack>
+        </Grid.Col>
 
         {/* Order Summary */}
-        <Paper shadow="sm" p="lg" withBorder style={{ alignSelf: 'start' }}>
+        <Grid.Col span={{ base: 12, md: 5 }}>
+        <Paper shadow="sm" p="lg" withBorder style={{ position: 'sticky', top: 20 }}>
           <Stack gap="md">
             <Title order={3}>Resumen del Pedido</Title>
 
@@ -296,7 +300,8 @@ export default function CheckoutPage() {
             </Button>
           </Stack>
         </Paper>
-      </div>
+        </Grid.Col>
+      </Grid>
     </Container>
   );
 }

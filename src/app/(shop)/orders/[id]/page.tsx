@@ -17,6 +17,7 @@ import {
   Timeline,
   Divider,
   Modal,
+  Grid,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
@@ -197,11 +198,13 @@ export default function OrderDetailPage({ params }: PageProps) {
         </Group>
       </Group>
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: 24 }}>
+      <Grid gutter="lg">
         {/* Order Items */}
+        <Grid.Col span={{ base: 12, md: 8 }}>
         <Stack gap="lg">
           <Card shadow="sm" padding="lg" withBorder>
             <Title order={3} mb="md">Productos</Title>
+            <Table.ScrollContainer minWidth={500}>
             <Table>
               <Table.Thead>
                 <Table.Tr>
@@ -234,6 +237,7 @@ export default function OrderDetailPage({ params }: PageProps) {
                 ))}
               </Table.Tbody>
             </Table>
+            </Table.ScrollContainer>
           </Card>
 
           {/* Order Timeline */}
@@ -285,9 +289,11 @@ export default function OrderDetailPage({ params }: PageProps) {
             )}
           </Card>
         </Stack>
+        </Grid.Col>
 
         {/* Order Summary */}
-        <Paper shadow="sm" p="lg" withBorder style={{ alignSelf: 'start' }}>
+        <Grid.Col span={{ base: 12, md: 4 }}>
+        <Paper shadow="sm" p="lg" withBorder style={{ position: 'sticky', top: 20 }}>
           <Stack gap="md">
             <Title order={3}>Resumen</Title>
 
@@ -382,7 +388,8 @@ export default function OrderDetailPage({ params }: PageProps) {
             </Button>
           </Stack>
         </Paper>
-      </div>
+        </Grid.Col>
+      </Grid>
 
       {/* Cancel Confirmation Modal */}
       <Modal

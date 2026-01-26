@@ -173,13 +173,13 @@ export default function ProductsPage() {
 
         {/* Filters */}
         <Paper shadow="xs" p="md" withBorder>
-          <Group align="flex-end" wrap="wrap">
+          <Group align="flex-end" wrap="wrap" grow>
             <TextInput
               placeholder="Buscar productos..."
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ flex: 1, minWidth: 200, maxWidth: 300 }}
+              style={{ minWidth: 180 }}
             />
             <NumberInput
               placeholder="Min"
@@ -188,7 +188,7 @@ export default function ProductsPage() {
               min={0}
               value={minPrice}
               onChange={(value) => setMinPrice(value as number | '')}
-              style={{ width: 120 }}
+              style={{ minWidth: 100 }}
             />
             <NumberInput
               placeholder="Max"
@@ -197,7 +197,7 @@ export default function ProductsPage() {
               min={0}
               value={maxPrice}
               onChange={(value) => setMaxPrice(value as number | '')}
-              style={{ width: 120 }}
+              style={{ minWidth: 100 }}
             />
             <Select
               label="Categoría"
@@ -206,7 +206,7 @@ export default function ProductsPage() {
               onChange={setCategory}
               data={categoriesData?.map((c) => ({ value: c.slug, label: c.name })) || []}
               clearable
-              style={{ width: 160 }}
+              style={{ minWidth: 140 }}
             />
             <Select
               label="Ordenar por"
@@ -217,7 +217,7 @@ export default function ProductsPage() {
                 { value: 'name', label: 'Nombre' },
                 { value: 'price', label: 'Precio' },
               ]}
-              style={{ width: 150 }}
+              style={{ minWidth: 130 }}
             />
             <Select
               label="Orden"
@@ -227,7 +227,7 @@ export default function ProductsPage() {
                 { value: 'asc', label: 'Ascendente' },
                 { value: 'desc', label: 'Descendente' },
               ]}
-              style={{ width: 130 }}
+              style={{ minWidth: 110 }}
             />
           </Group>
         </Paper>

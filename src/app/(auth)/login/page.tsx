@@ -12,8 +12,11 @@ import {
   Stack,
   Anchor,
   Alert,
+  Group,
+  UnstyledButton,
+  ThemeIcon,
 } from '@mantine/core';
-import { IconAlertCircle } from '@tabler/icons-react';
+import { IconAlertCircle, IconUser, IconShield } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -41,6 +44,7 @@ export default function LoginPage() {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -72,6 +76,11 @@ export default function LoginPage() {
 
   const onSubmit = (values: LoginForm) => {
     loginMutation.mutate(values);
+  };
+
+  const fillCredentials = (email: string, password: string) => {
+    setValue('email', email);
+    setValue('password', password);
   };
 
   return (
@@ -122,6 +131,49 @@ export default function LoginPage() {
             </Button>
           </Stack>
         </form>
+      </Paper>
+
+      {/* Test credentials for evaluators */}
+      <Paper withBorder p="md" mt="lg" radius="md" bg="gray.0">
+        <Text size="sm" fw={600} mb="sm">
+          Usuarios de prueba
+        </Text>
+        <Stack gap="xs">
+          <UnstyledButton
+            onClick={() => fillCredentials('admin@example.com', 'Admin123!')}
+            style={{ border: '1px solid var(--mantine-color-blue-3)', borderRadius: 8, padding: '10px 14px' }}
+          >
+            <Group gap="sm" justify="space-between">
+              <Group gap="sm" wrap="nowrap">
+                <ThemeIcon color="blue" variant="light" size="md">
+                  <IconShield size={16} />
+                </ThemeIcon>
+                <div>
+                  <Text size="sm" fw={600}>Administrador</Text>
+                  <Text size="xs" c="dimmed">admin@example.com</Text>
+                </div>
+              </Group>
+              <Text size="xs" c="dimmed" ff="monospace">Admin123!</Text>
+            </Group>
+          </UnstyledButton>
+          <UnstyledButton
+            onClick={() => fillCredentials('user@example.com', 'User123!')}
+            style={{ border: '1px solid var(--mantine-color-green-3)', borderRadius: 8, padding: '10px 14px' }}
+          >
+            <Group gap="sm" justify="space-between">
+              <Group gap="sm" wrap="nowrap">
+                <ThemeIcon color="green" variant="light" size="md">
+                  <IconUser size={16} />
+                </ThemeIcon>
+                <div>
+                  <Text size="sm" fw={600}>Cliente</Text>
+                  <Text size="xs" c="dimmed">user@example.com</Text>
+                </div>
+              </Group>
+              <Text size="xs" c="dimmed" ff="monospace">User123!</Text>
+            </Group>
+          </UnstyledButton>
+        </Stack>
       </Paper>
     </Container>
   );

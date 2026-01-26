@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import {
   Container,
   Paper,
@@ -10,7 +11,9 @@ import {
   Button,
   Stack,
   Anchor,
+  Alert,
 } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -32,6 +35,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get('redirect') || '/';
+  const sessionExpired = searchParams.get('session') === 'expired';
   const setAuth = useAuthStore((state) => state.setAuth);
 
   const {
@@ -79,6 +83,17 @@ export default function LoginPage() {
           Regístrate
         </Anchor>
       </Text>
+
+      {sessionExpired && (
+        <Alert
+          icon={<IconAlertCircle size={16} />}
+          color="orange"
+          mt="md"
+          title="Sesión expirada"
+        >
+          Tu sesión ha expirado. Por favor, inicia sesión nuevamente.
+        </Alert>
+      )}
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={handleSubmit(onSubmit)}>

@@ -257,6 +257,19 @@ export default function CheckoutPage() {
               </Alert>
             )}
 
+            {/* Test Card Info for Evaluators */}
+            <Alert color="yellow" title="Tarjeta de Prueba" icon={<IconCreditCard size={16} />}>
+              <Text size="xs" mb={4}>
+                <strong>Numero:</strong> 5031 7557 3453 0604
+              </Text>
+              <Text size="xs" mb={4}>
+                <strong>Vencimiento:</strong> 11/30 &nbsp; <strong>CVV:</strong> 123
+              </Text>
+              <Text size="xs" mb={4}>
+                <strong>Nombre:</strong> APRO &nbsp; <strong>DNI:</strong> 12345678
+              </Text>
+            </Alert>
+
             <Button
               size="lg"
               fullWidth

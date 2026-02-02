@@ -31,7 +31,9 @@ export function Providers({ children }: { children: React.ReactNode }) {
         <Notifications position="top-right" />
         {children}
       </MantineProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {process.env.NODE_ENV === 'development' && (
+        <ReactQueryDevtools initialIsOpen={false} />
+      )}
     </QueryClientProvider>
   );
 }

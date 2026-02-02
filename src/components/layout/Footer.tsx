@@ -4,19 +4,20 @@ import {
   Container,
   Group,
   Text,
-  Anchor,
   Stack,
   SimpleGrid,
-  Title,
-  ActionIcon,
-  Divider,
+  Box,
 } from '@mantine/core';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import {
   IconBrandFacebook,
   IconBrandInstagram,
   IconBrandTwitter,
   IconBrandTiktok,
+  IconMail,
+  IconMapPin,
+  IconClock,
 } from '@tabler/icons-react';
 import { useHomepageConfig } from '@/hooks/useSiteConfig';
 
@@ -33,10 +34,18 @@ const accountLinks = [
   { label: 'Mi carrito', href: '/cart' },
 ];
 
+const contactInfo = [
+  { icon: IconMail, text: 'hola@dynnamo.com' },
+  { icon: IconMapPin, text: 'Santiago, Chile' },
+  { icon: IconClock, text: 'Lun - Vie: 9:00 - 18:00' },
+];
+
 export function Footer() {
   const { data: config } = useHomepageConfig();
-  const storeName = config?.general?.storeName || 'Mi Tienda';
-  const storeDescription = config?.general?.storeDescription || 'Tu tienda online de confianza.';
+  const storeName = config?.general?.storeName || 'Dynnamo';
+  const storeDescription =
+    config?.general?.storeDescription ||
+    'Tu destino premium para productos exclusivos. Calidad excepcional, estilo único.';
   const socialLinks = config?.general?.socialLinks;
 
   const socialItems = [
@@ -49,101 +58,303 @@ export function Footer() {
   return (
     <footer
       style={{
-        backgroundColor: 'var(--mantine-color-gray-0)',
+        position: 'relative',
+        backgroundColor: 'var(--deep-ink)',
         marginTop: 'auto',
       }}
     >
-      <Container size="xl" py="xl">
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing="xl">
+      {/* Neon border top */}
+      <Box
+        pos="absolute"
+        top={0}
+        left={0}
+        right={0}
+        h={2}
+        style={{
+          background:
+            'linear-gradient(90deg, transparent 0%, var(--electric-orchid) 50%, transparent 100%)',
+          boxShadow: '0 0 30px 5px rgba(124, 58, 237, 0.4)',
+        }}
+      />
+
+      {/* Decorative gradient */}
+      <Box
+        pos="absolute"
+        top={0}
+        left="50%"
+        w={600}
+        h={200}
+        style={{
+          transform: 'translateX(-50%)',
+          background:
+            'radial-gradient(ellipse at center top, rgba(124, 58, 237, 0.1) 0%, transparent 70%)',
+          pointerEvents: 'none',
+        }}
+      />
+
+      <Container size="xl" py={{ base: 60, md: 80 }} pos="relative">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing={{ base: 40, md: 'xl' }}>
           {/* Brand Column */}
-          <Stack gap="md">
-            <Text size="xl" fw={700}>
-              {storeName}
-            </Text>
-            <Text size="sm" c="dimmed">
-              {storeDescription}
-            </Text>
+          <Stack gap="lg">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
+            >
+              <Text
+                size="xl"
+                fw={700}
+                style={{
+                  fontFamily: 'var(--font-display)',
+                  color: 'white',
+                  letterSpacing: '-0.5px',
+                }}
+              >
+                {storeName}
+              </Text>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+            >
+              <Text
+                size="sm"
+                style={{ color: 'rgba(255, 255, 255, 0.6)', lineHeight: 1.7 }}
+              >
+                {storeDescription}
+              </Text>
+            </motion.div>
+
             {socialItems.length > 0 && (
-              <Group gap="xs">
-                {socialItems.map((social) => (
-                  <ActionIcon
-                    key={social.label}
-                    component="a"
-                    href={social.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="subtle"
-                    color="gray"
-                    size="lg"
-                    aria-label={social.label}
-                  >
-                    <social.icon size={20} />
-                  </ActionIcon>
-                ))}
-              </Group>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <Group gap="sm">
+                  {socialItems.map((social) => (
+                    <motion.a
+                      key={social.label}
+                      href={social.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={social.label}
+                      whileHover={{ scale: 1.1, y: -2 }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        width: 40,
+                        height: 40,
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: 12,
+                        color: 'rgba(255, 255, 255, 0.7)',
+                        transition: 'all 0.2s ease',
+                      }}
+                    >
+                      <social.icon size={18} />
+                    </motion.a>
+                  ))}
+                </Group>
+              </motion.div>
             )}
           </Stack>
 
           {/* Tienda */}
-          <Stack gap="xs">
-            <Title order={6} tt="uppercase" c="dimmed">
-              Tienda
-            </Title>
-            {shopLinks.map((link) => (
-              <Anchor
-                key={link.href}
-                component={Link}
-                href={link.href}
-                size="sm"
-                c="dark.6"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Stack gap="md">
+              <Text
+                size="xs"
+                fw={600}
+                tt="uppercase"
+                style={{
+                  color: 'var(--electric-orchid)',
+                  letterSpacing: 2,
+                }}
               >
-                {link.label}
-              </Anchor>
-            ))}
-          </Stack>
+                Tienda
+              </Text>
+              {shopLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Text
+                    size="sm"
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      transition: 'color 0.2s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = 'white')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)')
+                    }
+                  >
+                    {link.label}
+                  </Text>
+                </Link>
+              ))}
+            </Stack>
+          </motion.div>
 
           {/* Mi Cuenta */}
-          <Stack gap="xs">
-            <Title order={6} tt="uppercase" c="dimmed">
-              Mi Cuenta
-            </Title>
-            {accountLinks.map((link) => (
-              <Anchor
-                key={link.href}
-                component={Link}
-                href={link.href}
-                size="sm"
-                c="dark.6"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            <Stack gap="md">
+              <Text
+                size="xs"
+                fw={600}
+                tt="uppercase"
+                style={{
+                  color: 'var(--electric-orchid)',
+                  letterSpacing: 2,
+                }}
               >
-                {link.label}
-              </Anchor>
-            ))}
-          </Stack>
+                Mi Cuenta
+              </Text>
+              {accountLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  style={{ textDecoration: 'none' }}
+                >
+                  <Text
+                    size="sm"
+                    style={{
+                      color: 'rgba(255, 255, 255, 0.6)',
+                      transition: 'color 0.2s ease',
+                      cursor: 'pointer',
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.color = 'white')
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)')
+                    }
+                  >
+                    {link.label}
+                  </Text>
+                </Link>
+              ))}
+            </Stack>
+          </motion.div>
 
-          {/* Info */}
-          <Stack gap="xs">
-            <Title order={6} tt="uppercase" c="dimmed">
-              Información
-            </Title>
-            <Text size="sm" c="dimmed">
-              Envío en 24-48h a todo el país.
-            </Text>
-            <Text size="sm" c="dimmed">
-              Devoluciones gratuitas hasta 30 días.
-            </Text>
-            <Text size="sm" c="dimmed">
-              Pago seguro con tarjeta o PayPal.
-            </Text>
-          </Stack>
+          {/* Contacto */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
+            <Stack gap="md">
+              <Text
+                size="xs"
+                fw={600}
+                tt="uppercase"
+                style={{
+                  color: 'var(--electric-orchid)',
+                  letterSpacing: 2,
+                }}
+              >
+                Contacto
+              </Text>
+              {contactInfo.map((item, index) => (
+                <Group key={index} gap="sm" wrap="nowrap">
+                  <Box
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: 32,
+                      height: 32,
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      border: '1px solid rgba(16, 185, 129, 0.2)',
+                      borderRadius: 8,
+                      flexShrink: 0,
+                    }}
+                  >
+                    <item.icon
+                      size={14}
+                      style={{ color: 'var(--jade-mint)' }}
+                    />
+                  </Box>
+                  <Text
+                    size="sm"
+                    style={{ color: 'rgba(255, 255, 255, 0.6)' }}
+                  >
+                    {item.text}
+                  </Text>
+                </Group>
+              ))}
+            </Stack>
+          </motion.div>
         </SimpleGrid>
 
-        <Divider my="xl" />
+        {/* Divider */}
+        <Box
+          my={{ base: 40, md: 48 }}
+          h={1}
+          style={{
+            background:
+              'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1) 20%, rgba(255, 255, 255, 0.1) 80%, transparent)',
+          }}
+        />
 
-        <Group justify="center">
-          <Text size="sm" c="dimmed">
-            &copy; {new Date().getFullYear()} {storeName}. Todos los derechos reservados.
-          </Text>
-        </Group>
+        {/* Bottom Bar */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+        >
+          <Group justify="space-between" wrap="wrap" gap="md">
+            <Text size="sm" style={{ color: 'rgba(255, 255, 255, 0.4)' }}>
+              &copy; {new Date().getFullYear()} {storeName}. Todos los derechos
+              reservados.
+            </Text>
+            <Group gap="xl">
+              {['Términos', 'Privacidad', 'Cookies'].map((item) => (
+                <Text
+                  key={item}
+                  size="sm"
+                  style={{
+                    color: 'rgba(255, 255, 255, 0.4)',
+                    cursor: 'pointer',
+                    transition: 'color 0.2s ease',
+                  }}
+                  onMouseEnter={(e) =>
+                    (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.7)')
+                  }
+                  onMouseLeave={(e) =>
+                    (e.currentTarget.style.color = 'rgba(255, 255, 255, 0.4)')
+                  }
+                >
+                  {item}
+                </Text>
+              ))}
+            </Group>
+          </Group>
+        </motion.div>
       </Container>
     </footer>
   );

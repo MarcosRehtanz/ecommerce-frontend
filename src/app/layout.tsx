@@ -1,10 +1,18 @@
 import '@mantine/core/styles.css';
 import '@mantine/carousel/styles.css';
 import '@mantine/notifications/styles.css';
+import './globals.css';
 import type { Metadata } from 'next';
 import { ColorSchemeScript } from '@mantine/core';
 import { Providers } from '@/components/providers/Providers';
 import { fetchHomepageConfig } from '@/lib/api/server';
+import { Inter } from 'next/font/google';
+
+const inter = Inter({
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-inter',
+});
 
 export async function generateMetadata(): Promise<Metadata> {
   const config = await fetchHomepageConfig();
@@ -33,11 +41,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="es">
+    <html lang="es" className={inter.variable}>
       <head>
         <ColorSchemeScript />
+        {/* Clash Display from Fontshare */}
+        <link
+          href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap"
+          rel="stylesheet"
+        />
       </head>
-      <body>
+      <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
     </html>

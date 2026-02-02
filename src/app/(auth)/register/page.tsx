@@ -82,7 +82,7 @@ export default function RegisterPage() {
 
   return (
     <Container size={420} my={40}>
-      <Title ta="center">Crear Cuenta</Title>
+      <Title ta="center" c="white">Crear Cuenta</Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         ¿Ya tienes una cuenta?{' '}
         <Anchor component={Link} href="/login" size="sm">
@@ -90,7 +90,16 @@ export default function RegisterPage() {
         </Anchor>
       </Text>
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper
+        shadow="md"
+        p={30}
+        mt={30}
+        radius="md"
+        style={{
+          backgroundColor: 'var(--mantine-color-dark-7)',
+          border: '1px solid var(--mantine-color-dark-4)',
+        }}
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
             <TextInput

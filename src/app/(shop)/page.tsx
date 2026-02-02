@@ -5,6 +5,8 @@ import {
   ValueProposition,
   SpecialOffer,
   Newsletter,
+  TrustBar,
+  Testimonials,
 } from '@/components/home';
 import { fetchProducts, fetchCategories, fetchBestSellers } from '@/lib/api/server';
 
@@ -21,8 +23,11 @@ export default async function HomePage() {
       {/* Hero Section - Primera impresión */}
       <HeroSection />
 
-      {/* Categorías Destacadas */}
-      <CategoryGrid initialCategories={categories || []} />
+      {/* Barra de confianza + Categorías - fondo oscuro continuo */}
+      <div style={{ backgroundColor: 'var(--deep-ink, #0F172A)' }}>
+        <TrustBar />
+        <CategoryGrid initialCategories={categories || []} />
+      </div>
 
       {/* Productos más vendidos */}
       <ProductCarousel
@@ -45,6 +50,9 @@ export default async function HomePage() {
         viewAllLink="/products?sortBy=createdAt&sortOrder=desc"
         initialProducts={newProducts?.data || []}
       />
+
+      {/* Testimonios de clientes */}
+      <Testimonials />
 
       {/* Newsletter */}
       <Newsletter />

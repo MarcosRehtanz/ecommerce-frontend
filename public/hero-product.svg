@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500" fill="none">
+  <!-- Premium headphones illustration -->
+  <defs>
+    <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#2d2d2d"/>
+      <stop offset="100%" style="stop-color:#1a1a1a"/>
+    </linearGradient>
+    <linearGradient id="purpleGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#7C3AED"/>
+      <stop offset="100%" style="stop-color:#5b21b6"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Headband -->
+  <path d="M150 200 Q250 80 350 200" stroke="url(#gradient1)" stroke-width="24" fill="none" stroke-linecap="round"/>
+  <path d="M150 200 Q250 90 350 200" stroke="#3a3a3a" stroke-width="16" fill="none" stroke-linecap="round"/>
+
+  <!-- Left ear cup -->
+  <ellipse cx="135" cy="280" rx="65" ry="80" fill="url(#gradient1)"/>
+  <ellipse cx="135" cy="280" rx="55" ry="70" fill="#2a2a2a"/>
+  <ellipse cx="135" cy="280" rx="45" ry="55" fill="#1f1f1f"/>
+  <!-- Purple accent on left -->
+  <path d="M80 260 Q75 280 80 300" stroke="url(#purpleGlow)" stroke-width="4" fill="none" filter="url(#glow)"/>
+
+  <!-- Right ear cup -->
+  <ellipse cx="365" cy="280" rx="65" ry="80" fill="url(#gradient1)"/>
+  <ellipse cx="365" cy="280" rx="55" ry="70" fill="#2a2a2a"/>
+  <ellipse cx="365" cy="280" rx="45" ry="55" fill="#1f1f1f"/>
+  <!-- Purple accent on right -->
+  <path d="M420 260 Q425 280 420 300" stroke="url(#purpleGlow)" stroke-width="4" fill="none" filter="url(#glow)"/>
+
+  <!-- Cushion details -->
+  <ellipse cx="135" cy="280" rx="35" ry="42" fill="#252525" stroke="#333" stroke-width="1"/>
+  <ellipse cx="365" cy="280" rx="35" ry="42" fill="#252525" stroke="#333" stroke-width="1"/>
+
+  <!-- Connection arms -->
+  <rect x="120" y="195" width="30" height="50" rx="5" fill="url(#gradient1)"/>
+  <rect x="350" y="195" width="30" height="50" rx="5" fill="url(#gradient1)"/>
+
+  <!-- Purple LED indicator -->
+  <circle cx="85" cy="320" r="4" fill="#7C3AED" filter="url(#glow)"/>
+
+  <!-- Subtle reflection -->
+  <ellipse cx="250" cy="420" rx="120" ry="15" fill="rgba(124,58,237,0.1)"/>
+</svg>

@@ -1,0 +1,371 @@
+/**
+ * NEO-LUXURY DESIGN SYSTEM
+ * ========================
+ * Global CSS Variables & Base Styles
+ */
+
+/* === CSS CUSTOM PROPERTIES === */
+:root {
+  /* Core Colors */
+  --deep-ink: #0F172A;
+  --electric-orchid: #7C3AED;
+  --jade-mint: #10B981;
+
+  /* Glassmorphism Tokens */
+  --glass-white: rgba(255, 255, 255, 0.05);
+  --glass-white-light: rgba(255, 255, 255, 0.03);
+  --glass-white-heavy: rgba(255, 255, 255, 0.08);
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-glass-light: rgba(255, 255, 255, 0.05);
+  --border-glass-heavy: rgba(255, 255, 255, 0.15);
+
+  /* Typography */
+  --font-display: 'Clash Display', var(--font-inter), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Shadows & Glows */
+  --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.3);
+  --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.4);
+
+  --glow-orchid: 0 0 40px rgba(124, 58, 237, 0.4);
+  --glow-orchid-hover: 0 0 60px rgba(124, 58, 237, 0.6);
+  --glow-orchid-intense: 0 0 80px rgba(124, 58, 237, 0.8);
+  --glow-mint: 0 0 20px rgba(16, 185, 129, 0.4);
+  --glow-neon-border: 0 0 30px 5px rgba(124, 58, 237, 0.6);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --ease-out-quad: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  /* Spacing */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 100px;
+}
+
+/* === BASE STYLES === */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--deep-ink);
+  color: white;
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection styling */
+::selection {
+  background-color: rgba(124, 58, 237, 0.3);
+  color: white;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--electric-orchid);
+  outline-offset: 2px;
+}
+
+/* === TYPOGRAPHY UTILITIES === */
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* === COLOR UTILITIES === */
+.bg-deep-ink {
+  background-color: var(--deep-ink);
+}
+
+.bg-electric-orchid {
+  background-color: var(--electric-orchid);
+}
+
+.bg-jade-mint {
+  background-color: var(--jade-mint);
+}
+
+.text-electric-orchid {
+  color: var(--electric-orchid);
+}
+
+.text-jade-mint {
+  color: var(--jade-mint);
+}
+
+/* === GLASSMORPHISM === */
+.glass-panel {
+  background: var(--glass-white);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-xl);
+}
+
+.glass-panel-light {
+  background: var(--glass-white-light);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass-light);
+  border-radius: var(--radius-xl);
+}
+
+.glass-panel-heavy {
+  background: var(--glass-white-heavy);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass-heavy);
+  border-radius: var(--radius-xl);
+}
+
+/* === GLOW EFFECTS === */
+.glow-orchid {
+  box-shadow: var(--glow-orchid);
+}
+
+.glow-orchid-hover:hover {
+  box-shadow: var(--glow-orchid-hover);
+}
+
+.glow-mint {
+  box-shadow: var(--glow-mint);
+}
+
+/* === BUTTON STYLES === */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: var(--electric-orchid);
+  color: white;
+  border: none;
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--glow-orchid);
+  transition: all var(--transition-normal);
+}
+
+.btn-primary:hover {
+  box-shadow: var(--glow-orchid-hover);
+  transform: scale(1.02);
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: var(--glass-white);
+  color: white;
+  border: 1px solid var(--border-glass-heavy);
+  border-radius: var(--radius-full);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  transition: all var(--transition-normal);
+}
+
+.btn-secondary:hover {
+  background: var(--glass-white-heavy);
+  border-color: rgba(255, 255, 255, 0.25);
+}
+
+/* === HERO RESPONSIVE === */
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr !important;
+    text-align: center;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+
+  .hero-grid > div:first-child {
+    order: 2;
+  }
+
+  .hero-grid > div:last-child {
+    order: 1;
+    max-height: 300px;
+  }
+}
+
+/* === GRADIENT BACKGROUNDS === */
+.gradient-orchid {
+  background: linear-gradient(135deg, var(--electric-orchid) 0%, #5b21b6 50%, #4c1d95 100%);
+}
+
+.gradient-radial-orchid {
+  background: radial-gradient(ellipse at center, rgba(124, 58, 237, 0.15) 0%, transparent 70%);
+}
+
+/* === NEON EFFECTS === */
+.neon-border-top {
+  position: relative;
+}
+
+.neon-border-top::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--electric-orchid) 50%, transparent 100%);
+  box-shadow: var(--glow-neon-border);
+}
+
+.neon-border-bottom {
+  position: relative;
+}
+
+.neon-border-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent 0%, var(--electric-orchid) 50%, transparent 100%);
+  box-shadow: var(--glow-neon-border);
+}
+
+/* === SCROLLBAR STYLING === */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--deep-ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* === MANTINE OVERRIDES === */
+/* Card with glassmorphism for dark sections */
+.mantine-Card-root {
+  background-color: var(--glass-white);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+}
+
+/* Custom Mantine color scheme support */
+[data-mantine-color-scheme="dark"] {
+  --mantine-color-body: var(--deep-ink);
+}
+
+/* === ANIMATION KEYFRAMES === */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    box-shadow: 0 0 40px rgba(124, 58, 237, 0.4);
+  }
+  50% {
+    opacity: 0.6;
+    box-shadow: 0 0 60px rgba(124, 58, 237, 0.6);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* === FORM INPUTS === */
+.input-glass {
+  width: 100%;
+  padding: 18px 24px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 100px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-glass::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.input-glass:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Dark variant for orchid backgrounds */
+.input-glass-dark {
+  width: 100%;
+  padding: 18px 24px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 100px;
+  color: white;
+  font-size: 16px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-glass-dark::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.input-glass-dark:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  background: rgba(0, 0, 0, 0.3);
+}

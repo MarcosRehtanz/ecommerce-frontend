@@ -1,54 +1,285 @@
 'use client';
 
-import {
-  Container,
-  SimpleGrid,
-  Card,
-  Text,
-  Title,
-  Box,
-  Overlay,
-  Group,
-  Anchor,
-  Skeleton,
-} from '@mantine/core';
+import { Box, Container, Title, Text, Skeleton } from '@mantine/core';
 import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
 import { IconArrowRight } from '@tabler/icons-react';
-import { useCategories } from '@/hooks/useCategories';
 
-// Default images for categories (used when no image is set)
-const defaultImages: Record<string, string> = {
-  electronica: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=600',
-  moda: 'https://images.unsplash.com/photo-1445205170230-053b83016050?w=600',
-  hogar: 'https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=600',
-  deportes: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=600',
-  belleza: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=600',
+// Premium category images
+const categoryImages: Record<string, string> = {
+  electronica:
+    'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&q=80',
+  moda: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=800&q=80',
+  hogar: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80',
+  deportes:
+    'https://images.unsplash.com/photo-1556906781-9a412961c28c?w=800&q=80',
+  belleza:
+    'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=800&q=80',
+  accesorios:
+    'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800&q=80',
 };
 
+// Fallback categories for when no data
+const fallbackCategories = [
+  {
+    id: '1',
+    name: 'Nueva Colección',
+    slug: 'nueva-coleccion',
+    description: 'Lo último en tendencias',
+    featured: true,
+  },
+  {
+    id: '2',
+    name: 'Accesorios',
+    slug: 'accesorios',
+    description: 'Complementa tu estilo',
+  },
+  {
+    id: '3',
+    name: 'Ediciones Limitadas',
+    slug: 'ediciones-limitadas',
+    description: 'Exclusividad garantizada',
+  },
+  {
+    id: '4',
+    name: 'Lo Más Vendido',
+    slug: 'mas-vendido',
+    description: 'Favoritos del público',
+  },
+];
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  imageData?: string;
+  imageUrl?: string;
+  _count?: { products: number };
+}
+
 interface CategoryGridProps {
-  initialCategories?: { id: string; name: string; slug: string; description?: string; imageData?: string; imageUrl?: string; _count?: { products: number } }[];
+  initialCategories?: Category[];
+}
+
+// Custom ease curve
+const easeOutQuad = [0.25, 0.46, 0.45, 0.94] as const;
+
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: easeOutQuad,
+    },
+  },
+};
+
+interface BentoTileProps {
+  category: Category;
+  size: 'large' | 'medium' | 'small';
+  className?: string;
+}
+
+function BentoTile({ category, size, className }: BentoTileProps) {
+  const imageUrl =
+    category.imageData ||
+    category.imageUrl ||
+    categoryImages[category.slug] ||
+    categoryImages.electronica;
+
+  const isLarge = size === 'large';
+
+  return (
+    <motion.div
+      variants={itemVariants}
+      className={className}
+      style={{
+        position: 'relative',
+        borderRadius: 24,
+        overflow: 'hidden',
+        cursor: 'pointer',
+      }}
+    >
+      <Link
+        href={`/products?category=${category.slug}`}
+        style={{ textDecoration: 'none', display: 'block', height: '100%' }}
+      >
+        <motion.div
+          style={{
+            position: 'relative',
+            width: '100%',
+            height: '100%',
+            minHeight: isLarge ? 400 : 190,
+          }}
+          whileHover="hover"
+          initial="initial"
+        >
+          {/* Image with zoom effect */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: 0,
+            }}
+            variants={{
+              initial: { scale: 1 },
+              hover: { scale: 1.1 },
+            }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+          >
+            <Image
+              src={imageUrl}
+              alt={category.name}
+              fill
+              style={{ objectFit: 'cover' }}
+              sizes={isLarge ? '50vw' : '25vw'}
+            />
+          </motion.div>
+
+          {/* Gradient Overlay - lightens on hover */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background:
+                'linear-gradient(to top, rgba(15, 23, 42, 0.9) 0%, rgba(15, 23, 42, 0.3) 50%, transparent 100%)',
+            }}
+            variants={{
+              initial: { opacity: 1 },
+              hover: { opacity: 0.7 },
+            }}
+            transition={{ duration: 0.5 }}
+          />
+
+          {/* Content */}
+          <Box
+            pos="absolute"
+            bottom={0}
+            left={0}
+            right={0}
+            p={isLarge ? 'xl' : 'lg'}
+            style={{ zIndex: 1 }}
+          >
+            <Text
+              c="white"
+              fz={isLarge ? 32 : 20}
+              fw={600}
+              mb={8}
+              style={{ fontFamily: 'var(--font-display)' }}
+            >
+              {category.name}
+            </Text>
+
+            {category.description && (
+              <Text c="white" opacity={0.7} size={isLarge ? 'md' : 'sm'} mb="md">
+                {category.description}
+              </Text>
+            )}
+
+            {/* Explore link */}
+            <motion.div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 8,
+              }}
+              variants={{
+                initial: { x: 0 },
+                hover: { x: 4 },
+              }}
+              transition={{ duration: 0.3 }}
+            >
+              <Text
+                component="span"
+                c="white"
+                size="sm"
+                fw={500}
+                style={{
+                  opacity: 0.8,
+                  transition: 'color 0.3s ease',
+                }}
+                className="explore-text"
+              >
+                Explorar
+              </Text>
+              <motion.div
+                variants={{
+                  initial: { x: 0, opacity: 0.8 },
+                  hover: { x: 4, opacity: 1 },
+                }}
+                transition={{ duration: 0.3 }}
+              >
+                <IconArrowRight size={16} color="white" style={{ opacity: 0.8 }} />
+              </motion.div>
+            </motion.div>
+          </Box>
+
+          {/* Badge for featured/new */}
+          {isLarge && (
+            <Box
+              pos="absolute"
+              top={20}
+              left={20}
+              px="md"
+              py={6}
+              style={{
+                background: 'var(--electric-orchid)',
+                borderRadius: 100,
+                zIndex: 1,
+              }}
+            >
+              <Text c="white" size="xs" fw={600}>
+                DESTACADO
+              </Text>
+            </Box>
+          )}
+        </motion.div>
+      </Link>
+    </motion.div>
+  );
 }
 
 export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
-  // Usar datos iniciales del servidor
-  const categories = initialCategories;
+  const categories =
+    initialCategories.length > 0
+      ? initialCategories.slice(0, 4)
+      : fallbackCategories;
+
   const isLoading = false;
 
   if (isLoading) {
     return (
-      <Box py="xl">
+      <Box py="xl" style={{ backgroundColor: 'var(--deep-ink)' }}>
         <Container size="xl">
-          <Group justify="space-between" mb="lg">
-            <div>
-              <Title order={2}>Categorías Destacadas</Title>
-              <Text c="dimmed">Explora nuestras colecciones</Text>
-            </div>
-          </Group>
-          <SimpleGrid cols={{ base: 2, md: 4 }} spacing="md">
-            {[1, 2, 3, 4].map((i) => (
-              <Skeleton key={i} height={200} radius="md" />
-            ))}
-          </SimpleGrid>
+          <Skeleton height={40} width={300} mb="xl" />
+          <Box
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '1fr 1fr',
+              gridTemplateRows: '1fr 1fr',
+              gap: 16,
+              height: 500,
+            }}
+          >
+            <Skeleton height="100%" radius="lg" style={{ gridRow: 'span 2' }} />
+            <Skeleton height="100%" radius="lg" />
+            <Skeleton height="100%" radius="lg" />
+          </Box>
         </Container>
       </Box>
     );
@@ -58,75 +289,151 @@ export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
     return null;
   }
 
+  // Ensure we have at least 4 categories
+  const displayCategories = [...categories];
+  while (displayCategories.length < 4) {
+    displayCategories.push(fallbackCategories[displayCategories.length]);
+  }
+
   return (
-    <Box py="xl">
+    <Box py="xl" style={{ backgroundColor: 'var(--deep-ink)' }}>
       <Container size="xl">
-        <Group justify="space-between" mb="lg">
-          <div>
-            <Title order={2}>Categorías Destacadas</Title>
-            <Text c="dimmed">Explora nuestras colecciones</Text>
-          </div>
-          <Anchor
-            component={Link}
-            href="/products"
-            c="blue"
-            fw={500}
-            style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          style={{ marginBottom: 40 }}
+        >
+          <Text
+            c="white"
+            size="sm"
+            fw={600}
+            mb="xs"
+            style={{
+              color: 'var(--electric-orchid)',
+              textTransform: 'uppercase',
+              letterSpacing: 2,
+            }}
           >
-            Ver todas <IconArrowRight size={16} />
-          </Anchor>
-        </Group>
+            Colecciones
+          </Text>
+          <Title
+            order={2}
+            c="white"
+            fz={{ base: 28, md: 36 }}
+            style={{ fontFamily: 'var(--font-display)' }}
+          >
+            Explora por Categoría
+          </Title>
+        </motion.div>
 
-        <SimpleGrid cols={{ base: 2, md: 4 }} spacing="md">
-          {categories.map((category) => {
-            const imageUrl = category.imageData || category.imageUrl || defaultImages[category.slug] || defaultImages.electronica;
+        {/* Bento Grid */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: '-100px' }}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(4, 1fr)',
+            gridTemplateRows: 'repeat(2, 200px)',
+            gap: 16,
+          }}
+          className="bento-grid"
+        >
+          {/* Hero Tile - spans 2x2 */}
+          <BentoTile
+            category={displayCategories[0]}
+            size="large"
+            className="bento-hero"
+          />
 
-            return (
-              <Card
-                key={category.id}
-                component={Link}
-                href={`/products?category=${category.slug}`}
-                p={0}
-                radius="md"
-                style={{
-                  overflow: 'hidden',
-                  textDecoration: 'none',
-                  aspectRatio: '1',
-                }}
-              >
-                <Box
-                  pos="relative"
-                  h="100%"
-                  style={{
-                    backgroundImage: `url(${imageUrl})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    transition: 'transform 0.3s ease',
-                  }}
-                  className="category-image"
-                >
-                  <Overlay
-                    gradient="linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%)"
-                    opacity={1}
-                  />
-                  <Box pos="absolute" bottom={0} left={0} right={0} p="md" style={{ zIndex: 1 }}>
-                    <Text c="white" fw={700} fz="lg">
-                      {category.name}
-                    </Text>
-                    <Text c="white" size="sm" opacity={0.8}>
-                      {category.description || `${category._count?.products || 0} productos`}
-                    </Text>
-                  </Box>
-                </Box>
-              </Card>
-            );
-          })}
-        </SimpleGrid>
+          {/* Secondary Tiles */}
+          <BentoTile
+            category={displayCategories[1]}
+            size="medium"
+            className="bento-item-1"
+          />
+
+          <BentoTile
+            category={displayCategories[2]}
+            size="small"
+            className="bento-item-2"
+          />
+
+          <BentoTile
+            category={displayCategories[3]}
+            size="small"
+            className="bento-item-3"
+          />
+        </motion.div>
       </Container>
 
       <style>{`
-        .category-image:hover {
-          transform: scale(1.05);
+        .bento-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          grid-template-rows: repeat(2, 200px);
+          gap: 16px;
+        }
+
+        .bento-hero {
+          grid-column: span 2;
+          grid-row: span 2;
+        }
+
+        .bento-item-1 {
+          grid-column: span 2;
+        }
+
+        .bento-item-2 {
+          grid-column: span 1;
+        }
+
+        .bento-item-3 {
+          grid-column: span 1;
+        }
+
+        .bento-grid:hover .explore-text {
+          color: var(--electric-orchid);
+        }
+
+        @media (max-width: 768px) {
+          .bento-grid {
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(3, 180px);
+          }
+
+          .bento-hero {
+            grid-column: span 2;
+            grid-row: span 1;
+          }
+
+          .bento-item-1 {
+            grid-column: span 2;
+          }
+
+          .bento-item-2,
+          .bento-item-3 {
+            grid-column: span 1;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .bento-grid {
+            grid-template-columns: 1fr;
+            grid-template-rows: repeat(4, 200px);
+          }
+
+          .bento-hero,
+          .bento-item-1,
+          .bento-item-2,
+          .bento-item-3 {
+            grid-column: span 1;
+            grid-row: span 1;
+          }
         }
       `}</style>
     </Box>

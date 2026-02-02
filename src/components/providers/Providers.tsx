@@ -1,16 +1,11 @@
 'use client';
 
-import { MantineProvider, createTheme } from '@mantine/core';
+import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { useState } from 'react';
-
-const theme = createTheme({
-  primaryColor: 'blue',
-  fontFamily: 'Inter, system-ui, sans-serif',
-  defaultRadius: 'md',
-});
+import { neoLuxuryTheme } from '@/lib/theme/neo-luxury';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
@@ -27,7 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <MantineProvider theme={theme}>
+      <MantineProvider theme={neoLuxuryTheme} defaultColorScheme="dark">
         <Notifications position="top-right" />
         {children}
       </MantineProvider>

@@ -5,3 +5,6 @@ export { ProductCarousel } from './ProductCarousel';
 export { ValueProposition } from './ValueProposition';
 export { SpecialOffer } from './SpecialOffer';
 export { Newsletter } from './Newsletter';
+export { TrustBar } from './TrustBar';
+export { Testimonials } from './Testimonials';
+export { CountdownTimer } from './CountdownTimer';

@@ -85,7 +85,7 @@ export default function LoginPage() {
 
   return (
     <Container size={420} my={40}>
-      <Title ta="center">Iniciar Sesión</Title>
+      <Title ta="center" c="white">Iniciar Sesión</Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         ¿No tienes una cuenta?{' '}
         <Anchor component={Link} href="/register" size="sm">
@@ -104,7 +104,16 @@ export default function LoginPage() {
         </Alert>
       )}
 
-      <Paper withBorder shadow="md" p={30} mt={30} radius="md">
+      <Paper
+        shadow="md"
+        p={30}
+        mt={30}
+        radius="md"
+        style={{
+          backgroundColor: 'var(--mantine-color-dark-7)',
+          border: '1px solid var(--mantine-color-dark-4)',
+        }}
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Stack>
             <TextInput
@@ -134,14 +143,27 @@ export default function LoginPage() {
       </Paper>
 
       {/* Test credentials for evaluators */}
-      <Paper withBorder p="md" mt="lg" radius="md" bg="gray.0">
-        <Text size="sm" fw={600} mb="sm">
+      <Paper
+        p="md"
+        mt="lg"
+        radius="md"
+        style={{
+          backgroundColor: 'var(--mantine-color-dark-8)',
+          border: '1px solid var(--mantine-color-dark-5)',
+        }}
+      >
+        <Text size="sm" fw={600} mb="sm" c="white">
           Usuarios de prueba
         </Text>
         <Stack gap="xs">
           <UnstyledButton
             onClick={() => fillCredentials('admin@example.com', 'Admin123!')}
-            style={{ border: '1px solid var(--mantine-color-blue-3)', borderRadius: 8, padding: '10px 14px' }}
+            style={{
+              border: '1px solid var(--mantine-color-blue-8)',
+              borderRadius: 8,
+              padding: '10px 14px',
+              backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            }}
           >
             <Group gap="sm" justify="space-between">
               <Group gap="sm" wrap="nowrap">
@@ -149,7 +171,7 @@ export default function LoginPage() {
                   <IconShield size={16} />
                 </ThemeIcon>
                 <div>
-                  <Text size="sm" fw={600}>Administrador</Text>
+                  <Text size="sm" fw={600} c="white">Administrador</Text>
                   <Text size="xs" c="dimmed">admin@example.com</Text>
                 </div>
               </Group>
@@ -158,7 +180,12 @@ export default function LoginPage() {
           </UnstyledButton>
           <UnstyledButton
             onClick={() => fillCredentials('user@example.com', 'User123!')}
-            style={{ border: '1px solid var(--mantine-color-green-3)', borderRadius: 8, padding: '10px 14px' }}
+            style={{
+              border: '1px solid var(--mantine-color-green-8)',
+              borderRadius: 8,
+              padding: '10px 14px',
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+            }}
           >
             <Group gap="sm" justify="space-between">
               <Group gap="sm" wrap="nowrap">
@@ -166,7 +193,7 @@ export default function LoginPage() {
                   <IconUser size={16} />
                 </ThemeIcon>
                 <div>
-                  <Text size="sm" fw={600}>Cliente</Text>
+                  <Text size="sm" fw={600} c="white">Cliente</Text>
                   <Text size="xs" c="dimmed">user@example.com</Text>
                 </div>
               </Group>

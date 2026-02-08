@@ -1,12 +1,13 @@
 'use client';
 
 import { useRef } from 'react';
-import { Box, Container, Text, Skeleton } from '@mantine/core';
+import { Box, Container, Text } from '@mantine/core';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { IconArrowRight } from '@tabler/icons-react';
-import { useHomepageConfig } from '@/hooks/useSiteConfig';
+import { ROUTES, productsSortNewestRoute } from '@/lib/routes';
+import { HeroConfig } from '@/types';
 
 // Default values
 const defaults = {
@@ -14,9 +15,9 @@ const defaults = {
   subtitle:
     'Descubre piezas exclusivas seleccionadas para quienes buscan lo extraordinario.',
   primaryButtonText: 'Explorar Coleccin',
-  primaryButtonLink: '/products',
+  primaryButtonLink: ROUTES.products.list,
   secondaryButtonText: 'Novedades',
-  secondaryButtonLink: '/products?sort=newest',
+  secondaryButtonLink: productsSortNewestRoute(),
   heroImage: '/hero-product.svg',
 };
 
@@ -69,9 +70,11 @@ const imageVariants = {
   },
 };
 
-export function HeroSection() {
-  const { data: config, isLoading } = useHomepageConfig();
-  const heroConfig = config?.hero;
+interface HeroSectionProps {
+  config?: HeroConfig;
+}
+
+export function HeroSection({ config: heroConfig }: HeroSectionProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Mouse position for parallax
@@ -99,6 +102,13 @@ export function HeroSection() {
   const secondaryButtonLink =
     heroConfig?.secondaryButtonLink || defaults.secondaryButtonLink;
   const heroImage = heroConfig?.backgroundImage || defaults.heroImage;
+
+  // Content fields — only show if explicitly configured (no fake defaults)
+  const badge = heroConfig?.badge;
+  const trustIndicators = heroConfig?.trustIndicators;
+  const floatingBadge = heroConfig?.floatingBadge;
+  const priceOriginal = heroConfig?.priceOriginal;
+  const priceDiscounted = heroConfig?.priceDiscounted;
 
   // Don't render if explicitly set to not visible
   if (heroConfig && !heroConfig.isVisible) {
@@ -173,52 +183,46 @@ export function HeroSection() {
         }}
       />
 
-      <Container size="xl" h="100vh" pos="relative" style={{ zIndex: 2 }}>
+      <Container size="xl" mih="100vh" pos="relative" style={{ zIndex: 2 }}>
         <Box
           className="hero-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
             alignItems: 'center',
             height: '100%',
             gap: '2rem',
           }}
         >
           {/* Text Content */}
-          {isLoading ? (
-            <Box>
-              <Skeleton height={60} width="80%" mb="md" />
-              <Skeleton height={80} width="90%" mb="lg" />
-              <Skeleton height={30} width="70%" mb="xl" />
-              <Skeleton height={50} width={200} radius="xl" />
-            </Box>
-          ) : (
-            <motion.div
+          <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
+              className="hero-content"
               style={{ maxWidth: 600 }}
             >
-              {/* Badge */}
-              <motion.div variants={itemVariants}>
-                <Box
-                  component="span"
-                  px="md"
-                  py={6}
-                  mb="lg"
-                  style={{
-                    display: 'inline-block',
-                    background: 'rgba(124, 58, 237, 0.15)',
-                    border: '1px solid rgba(124, 58, 237, 0.3)',
-                    borderRadius: 100,
-                    color: 'var(--electric-orchid)',
-                    fontSize: 14,
-                    fontWeight: 500,
-                  }}
-                >
-                  Nueva Coleccin 2025
-                </Box>
-              </motion.div>
+              {/* Badge — only if configured */}
+              {badge && (
+                <motion.div variants={itemVariants}>
+                  <Box
+                    component="span"
+                    px="md"
+                    py={6}
+                    mb="lg"
+                    style={{
+                      display: 'inline-block',
+                      background: 'rgba(124, 58, 237, 0.15)',
+                      border: '1px solid rgba(124, 58, 237, 0.3)',
+                      borderRadius: 100,
+                      color: 'var(--electric-orchid)',
+                      fontSize: 14,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {badge}
+                  </Box>
+                </motion.div>
+              )}
 
               {/* Headline */}
               <motion.h1
@@ -256,7 +260,7 @@ export function HeroSection() {
               >
                 {/* Primary CTA */}
                 <Link href={primaryButtonLink} style={{ textDecoration: 'none' }}>
-                  <motion.button
+                  <motion.div
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.98 }}
                     style={{
@@ -266,7 +270,6 @@ export function HeroSection() {
                       padding: '1rem 2rem',
                       background: 'var(--electric-orchid)',
                       color: 'white',
-                      border: 'none',
                       borderRadius: 100,
                       fontSize: 16,
                       fontWeight: 500,
@@ -285,7 +288,7 @@ export function HeroSection() {
                   >
                     {primaryButtonText}
                     <IconArrowRight size={18} />
-                  </motion.button>
+                  </motion.div>
                 </Link>
 
                 {/* Secondary CTA */}
@@ -294,7 +297,7 @@ export function HeroSection() {
                     href={secondaryButtonLink}
                     style={{ textDecoration: 'none' }}
                   >
-                    <motion.button
+                    <motion.div
                       whileHover={{ scale: 1.05 }}
                       whileTap={{ scale: 0.98 }}
                       style={{
@@ -326,54 +329,44 @@ export function HeroSection() {
                       }}
                     >
                       {secondaryButtonText}
-                    </motion.button>
+                    </motion.div>
                   </Link>
                 )}
               </motion.div>
 
-              {/* Trust indicators */}
-              <motion.div
-                variants={itemVariants}
-                style={{
-                  display: 'flex',
-                  gap: '2rem',
-                  marginTop: '3rem',
-                  opacity: 0.6,
-                }}
-              >
-                <Box>
-                  <Text c="white" fw={600} fz={24} lh={1}>
-                    10K+
-                  </Text>
-                  <Text c="white" fz="sm" opacity={0.7}>
-                    Clientes felices
-                  </Text>
-                </Box>
-                <Box>
-                  <Text c="white" fw={600} fz={24} lh={1}>
-                    4.9
-                  </Text>
-                  <Text c="white" fz="sm" opacity={0.7}>
-                    Calificacin
-                  </Text>
-                </Box>
-                <Box>
-                  <Text c="white" fw={600} fz={24} lh={1}>
-                    24h
-                  </Text>
-                  <Text c="white" fz="sm" opacity={0.7}>
-                    Envo express
-                  </Text>
-                </Box>
-              </motion.div>
+              {/* Trust indicators — only if configured */}
+              {trustIndicators && trustIndicators.length > 0 && (
+                <motion.div
+                  variants={itemVariants}
+                  className="hero-trust-indicators"
+                  style={{
+                    display: 'flex',
+                    gap: '2rem',
+                    marginTop: '3rem',
+                    opacity: 0.6,
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  {trustIndicators.map((indicator, idx) => (
+                    <Box key={idx}>
+                      <Text c="white" fw={600} fz={24} lh={1}>
+                        {indicator.value}
+                      </Text>
+                      <Text c="white" fz="sm" opacity={0.7}>
+                        {indicator.label}
+                      </Text>
+                    </Box>
+                  ))}
+                </motion.div>
+              )}
             </motion.div>
-          )}
 
           {/* Floating Product Image with Parallax */}
           <motion.div
             variants={imageVariants}
             initial="hidden"
             animate="visible"
+            className="hero-image-container"
             style={{
               position: 'relative',
               display: 'flex',
@@ -437,64 +430,68 @@ export function HeroSection() {
                 />
               </Box>
 
-              {/* Floating badge */}
-              <motion.div
-                animate={{
-                  y: [0, -10, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                }}
-                style={{
-                  position: 'absolute',
-                  top: '10%',
-                  right: '5%',
-                  padding: '0.75rem 1.25rem',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.2)',
-                  borderRadius: 16,
-                }}
-              >
-                <Text c="white" fw={600} fz="sm">
-                  -40% OFF
-                </Text>
-              </motion.div>
-
-              {/* Price tag */}
-              <motion.div
-                animate={{
-                  y: [0, 10, 0],
-                }}
-                transition={{
-                  duration: 3.5,
-                  repeat: Infinity,
-                  ease: 'easeInOut',
-                  delay: 0.5,
-                }}
-                style={{
-                  position: 'absolute',
-                  bottom: '15%',
-                  left: '0%',
-                  padding: '1rem 1.5rem',
-                  background: 'white',
-                  borderRadius: 16,
-                  boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
-                }}
-              >
-                <Text c="dimmed" fz="xs" td="line-through">
-                  $299.00
-                </Text>
-                <Text
-                  fw={700}
-                  fz="xl"
-                  style={{ color: 'var(--electric-orchid)' }}
+              {/* Floating badge — only if configured */}
+              {floatingBadge && (
+                <motion.div
+                  animate={{
+                    y: [0, -10, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                  style={{
+                    position: 'absolute',
+                    top: '10%',
+                    right: '5%',
+                    padding: '0.75rem 1.25rem',
+                    background: 'rgba(255, 255, 255, 0.1)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRadius: 16,
+                  }}
                 >
-                  $179.00
-                </Text>
-              </motion.div>
+                  <Text c="white" fw={600} fz="sm">
+                    {floatingBadge}
+                  </Text>
+                </motion.div>
+              )}
+
+              {/* Price tag — only if configured */}
+              {priceOriginal && priceDiscounted && (
+                <motion.div
+                  animate={{
+                    y: [0, 10, 0],
+                  }}
+                  transition={{
+                    duration: 3.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                    delay: 0.5,
+                  }}
+                  style={{
+                    position: 'absolute',
+                    bottom: '15%',
+                    left: '0%',
+                    padding: '1rem 1.5rem',
+                    background: 'white',
+                    borderRadius: 16,
+                    boxShadow: '0 10px 40px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <Text c="dimmed" fz="xs" td="line-through">
+                    {priceOriginal}
+                  </Text>
+                  <Text
+                    fw={700}
+                    fz="xl"
+                    style={{ color: 'var(--electric-orchid)' }}
+                  >
+                    {priceDiscounted}
+                  </Text>
+                </motion.div>
+              )}
             </motion.div>
           </motion.div>
         </Box>

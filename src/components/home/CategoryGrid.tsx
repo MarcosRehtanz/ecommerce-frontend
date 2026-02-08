@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { IconArrowRight } from '@tabler/icons-react';
+import { productsByCategoryRoute } from '@/lib/routes';
+import { CategoryGridConfig } from '@/types';
 
 // Premium category images
 const categoryImages: Record<string, string> = {
@@ -61,6 +63,7 @@ interface Category {
 
 interface CategoryGridProps {
   initialCategories?: Category[];
+  config?: CategoryGridConfig;
 }
 
 // Custom ease curve
@@ -117,7 +120,7 @@ function BentoTile({ category, size, className }: BentoTileProps) {
       }}
     >
       <Link
-        href={`/products?category=${category.slug}`}
+        href={productsByCategoryRoute(category.slug)}
         style={{ textDecoration: 'none', display: 'block', height: '100%' }}
       >
         <motion.div
@@ -125,7 +128,7 @@ function BentoTile({ category, size, className }: BentoTileProps) {
             position: 'relative',
             width: '100%',
             height: '100%',
-            minHeight: isLarge ? 400 : 190,
+            minHeight: isLarge ? 280 : 190,
           }}
           whileHover="hover"
           initial="initial"
@@ -254,7 +257,13 @@ function BentoTile({ category, size, className }: BentoTileProps) {
   );
 }
 
-export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
+export function CategoryGrid({ initialCategories = [], config: gridConfig }: CategoryGridProps) {
+
+  if (gridConfig?.isVisible === false) return null;
+
+  const sectionLabel = gridConfig?.sectionLabel || 'Colecciones';
+  const sectionTitle = gridConfig?.title || 'Explora por Categoría';
+
   const categories =
     initialCategories.length > 0
       ? initialCategories.slice(0, 4)
@@ -317,7 +326,7 @@ export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
               letterSpacing: 2,
             }}
           >
-            Colecciones
+            {sectionLabel}
           </Text>
           <Title
             order={2}
@@ -325,7 +334,7 @@ export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
             fz={{ base: 28, md: 36 }}
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Explora por Categoría
+            {sectionTitle}
           </Title>
         </motion.div>
 
@@ -335,12 +344,6 @@ export function CategoryGrid({ initialCategories = [] }: CategoryGridProps) {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, margin: '-100px' }}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(4, 1fr)',
-            gridTemplateRows: 'repeat(2, 200px)',
-            gap: 16,
-          }}
           className="bento-grid"
         >
           {/* Hero Tile - spans 2x2 */}

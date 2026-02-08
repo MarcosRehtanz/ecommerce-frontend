@@ -1,11 +1,12 @@
 'use client';
 
-import { Box, Container, Title, Text, Skeleton } from '@mantine/core';
+import { Box, Container, Title, Text } from '@mantine/core';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { IconArrowRight, IconBolt } from '@tabler/icons-react';
-import { useHomepageConfig } from '@/hooks/useSiteConfig';
 import { CountdownTimer } from './CountdownTimer';
+import { productsOnSaleRoute } from '@/lib/routes';
+import { SpecialOfferConfig } from '@/types';
 
 // Default values - set a date 3 days from now for demo
 const getDefaultEndDate = () => {
@@ -20,13 +21,15 @@ const defaults = {
   subtitle: 'OFERTA POR TIEMPO LIMITADO',
   description: 'La oferta termina en:',
   buttonText: 'Comprar Ahora',
-  buttonLink: '/products?onSale=true',
+  buttonLink: productsOnSaleRoute(),
   endDate: getDefaultEndDate(),
 };
 
-export function SpecialOffer() {
-  const { data: config, isLoading } = useHomepageConfig();
-  const offerConfig = config?.['special-offer'];
+interface SpecialOfferProps {
+  config?: SpecialOfferConfig;
+}
+
+export function SpecialOffer({ config: offerConfig }: SpecialOfferProps) {
 
   // Use config values or defaults
   const title = offerConfig?.title || defaults.title;
@@ -37,6 +40,8 @@ export function SpecialOffer() {
   const endDate = offerConfig?.endDate
     ? new Date(offerConfig.endDate)
     : defaults.endDate;
+  // Content field — only show if configured (it's a business claim)
+  const trustText = offerConfig?.trustText;
 
   // Don't render if explicitly set to not visible
   if (offerConfig && !offerConfig.isVisible) {
@@ -46,16 +51,6 @@ export function SpecialOffer() {
   // Don't render if offer has expired
   if (endDate < new Date()) {
     return null;
-  }
-
-  if (isLoading) {
-    return (
-      <Box py="xl" style={{ backgroundColor: 'var(--deep-ink, #0F172A)' }}>
-        <Container size="xl">
-          <Skeleton height={300} radius="lg" />
-        </Container>
-      </Box>
-    );
   }
 
   return (
@@ -287,17 +282,19 @@ export function SpecialOffer() {
             </Link>
           </motion.div>
 
-          {/* Trust text */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.5 }}
-          >
-            <Text c="white" opacity={0.4} size="sm" mt="xl">
-              Envío gratis en pedidos mayores a $50.000
-            </Text>
-          </motion.div>
+          {/* Trust text — only if configured */}
+          {trustText && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
+              <Text c="white" opacity={0.4} size="sm" mt="xl">
+                {trustText}
+              </Text>
+            </motion.div>
+          )}
         </Box>
       </Container>
     </Box>

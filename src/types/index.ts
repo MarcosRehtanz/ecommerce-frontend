@@ -152,6 +152,11 @@ export interface HeroConfig {
   secondaryButtonText?: string;
   secondaryButtonLink?: string;
   backgroundImage?: string;
+  badge?: string;
+  trustIndicators?: { value: string; label: string }[];
+  floatingBadge?: string;
+  priceOriginal?: string;
+  priceDiscounted?: string;
   isVisible: boolean;
 }
 
@@ -166,6 +171,7 @@ export interface SpecialOfferConfig {
   endDate?: string;
   isVisible: boolean;
   backgroundColor?: string;
+  trustText?: string;
 }
 
 export interface GeneralConfig {
@@ -177,6 +183,74 @@ export interface GeneralConfig {
     twitter?: string;
     tiktok?: string;
   };
+  faviconUrl?: string;
+  ogImage?: string;
+  keywords?: string;
+  titleSuffix?: string;
+}
+
+export interface TestimonialsConfig {
+  sectionLabel?: string;
+  title?: string;
+  subtitle?: string;
+  isVisible: boolean;
+  items: {
+    name: string;
+    rating: number;
+    text: string;
+    product: string;
+  }[];
+  metrics?: {
+    averageRating: string;
+    totalCustomers: string;
+    recommendRate: string;
+    averageRatingLabel?: string;
+    totalCustomersLabel?: string;
+    recommendRateLabel?: string;
+  };
+}
+
+export interface ValuePropositionConfig {
+  sectionLabel?: string;
+  title?: string;
+  isVisible: boolean;
+  items: {
+    icon: string;
+    title: string;
+    description: string;
+    colorScheme: 'orchid' | 'jade';
+  }[];
+}
+
+export interface TrustBarConfig {
+  isVisible: boolean;
+  items: {
+    icon: string;
+    text: string;
+  }[];
+}
+
+export interface ProductCarouselsConfig {
+  bestSellers?: { title: string; subtitle?: string; isVisible?: boolean };
+  newProducts?: { title: string; subtitle?: string; isVisible?: boolean };
+}
+
+export interface CategoryGridConfig {
+  sectionLabel?: string;
+  title?: string;
+  isVisible: boolean;
+}
+
+export interface NewsletterConfig {
+  badge?: string;
+  title?: string;
+  description?: string;
+  buttonText?: string;
+  successTitle?: string;
+  successMessage?: string;
+  trustText?: string;
+  benefits?: string[];
+  isVisible: boolean;
 }
 
 export interface HomepageConfig {
@@ -184,6 +258,12 @@ export interface HomepageConfig {
   topbar?: TopBarConfig;
   hero?: HeroConfig;
   'special-offer'?: SpecialOfferConfig;
+  testimonials?: TestimonialsConfig;
+  'value-proposition'?: ValuePropositionConfig;
+  'trust-bar'?: TrustBarConfig;
+  'product-carousels'?: ProductCarouselsConfig;
+  newsletter?: NewsletterConfig;
+  'category-grid'?: CategoryGridConfig;
 }
 
 // Newsletter types

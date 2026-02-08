@@ -6,27 +6,35 @@ import {
   IconShieldCheck,
   IconHeadset,
 } from '@tabler/icons-react';
+import { getIcon } from '@/lib/icon-map';
+import { TrustBarConfig } from '@/types';
 
-const trustItems = [
-  {
-    icon: IconTruckDelivery,
-    text: 'Envo Express 24-48h',
-  },
-  {
-    icon: IconShieldCheck,
-    text: 'Pago 100% Seguro',
-  },
-  {
-    icon: IconHeadset,
-    text: 'Soporte Premium 24/7',
-  },
+const DEFAULT_TRUST_ITEMS = [
+  { icon: 'IconTruckDelivery', text: 'Envo Express 24-48h' },
+  { icon: 'IconShieldCheck', text: 'Pago 100% Seguro' },
+  { icon: 'IconHeadset', text: 'Soporte Premium 24/7' },
 ];
 
-export function TrustBar() {
+const FALLBACK_ICONS: Record<string, React.ComponentType<any>> = {
+  IconTruckDelivery,
+  IconShieldCheck,
+  IconHeadset,
+};
+
+interface TrustBarProps {
+  config?: TrustBarConfig;
+}
+
+export function TrustBar({ config: trustBarConfig }: TrustBarProps) {
+
+  if (trustBarConfig?.isVisible === false) return null;
+
+  const items = trustBarConfig?.items || DEFAULT_TRUST_ITEMS;
+
   return (
     <Box
       py="md"
-      mt={-40}
+      mt={{ base: 0, md: -40 }}
       pos="relative"
       style={{ zIndex: 10 }}
     >
@@ -44,36 +52,40 @@ export function TrustBar() {
           }}
         >
           <Group justify="space-between" gap="xl" wrap="wrap">
-            {trustItems.map((item, index) => (
-              <Group
-                key={index}
-                gap="sm"
-                wrap="nowrap"
-                style={{ flex: '1 1 auto', justifyContent: 'center' }}
-              >
-                <Box
-                  p={8}
-                  style={{
-                    background: 'rgba(16, 185, 129, 0.1)',
-                    borderRadius: 8,
-                  }}
+            {items.map((item, index) => {
+              const IconComponent = getIcon(item.icon) || FALLBACK_ICONS[item.icon] || IconTruckDelivery;
+
+              return (
+                <Group
+                  key={index}
+                  gap="sm"
+                  wrap="nowrap"
+                  style={{ flex: '1 1 auto', justifyContent: 'center' }}
                 >
-                  <item.icon
-                    size={22}
-                    style={{ color: 'var(--jade-mint, #10B981)' }}
-                    stroke={1.5}
-                  />
-                </Box>
-                <Text
-                  c="white"
-                  size="sm"
-                  fw={500}
-                  style={{ opacity: 0.9 }}
-                >
-                  {item.text}
-                </Text>
-              </Group>
-            ))}
+                  <Box
+                    p={8}
+                    style={{
+                      background: 'rgba(16, 185, 129, 0.1)',
+                      borderRadius: 8,
+                    }}
+                  >
+                    <IconComponent
+                      size={22}
+                      style={{ color: 'var(--jade-mint, #10B981)' }}
+                      stroke={1.5}
+                    />
+                  </Box>
+                  <Text
+                    c="white"
+                    size="sm"
+                    fw={500}
+                    style={{ opacity: 0.9 }}
+                  >
+                    {item.text}
+                  </Text>
+                </Group>
+              );
+            })}
           </Group>
         </Box>
       </Container>

@@ -31,6 +31,7 @@ import { useRouter } from 'next/navigation';
 import { useUser, useLogout } from '@/hooks/useAuth';
 import { useCartStore } from '@/stores/cartStore';
 import { useHomepageConfig } from '@/hooks/useSiteConfig';
+import { ROUTES, productsSearchRoute } from '@/lib/routes';
 
 export function Header() {
   const router = useRouter();
@@ -43,12 +44,12 @@ export function Header() {
   const [searchValue, setSearchValue] = useState('');
   const [searchOpen, setSearchOpen] = useState(false);
   const { data: config } = useHomepageConfig();
-  const storeName = config?.general?.storeName || 'Dynnamo';
+  const storeName = config?.general?.storeName || 'Mi Tienda';
 
   const handleSearch = () => {
     const trimmed = searchValue.trim();
     if (trimmed) {
-      router.push(`/products?search=${encodeURIComponent(trimmed)}`);
+      router.push(productsSearchRoute(trimmed));
       setSearchValue('');
       setSearchOpen(false);
       closeDrawer();
@@ -60,11 +61,8 @@ export function Header() {
   };
 
   return (
-    <header
+    <div
       style={{
-        position: 'sticky',
-        top: 0,
-        zIndex: 100,
         backgroundColor: 'rgba(15, 23, 42, 0.8)',
         backdropFilter: 'blur(16px)',
         WebkitBackdropFilter: 'blur(16px)',
@@ -74,7 +72,7 @@ export function Header() {
       <Container size="xl" py="md">
         <Group justify="space-between">
           {/* Logo */}
-          <Link href="/" style={{ textDecoration: 'none' }}>
+          <Link href={ROUTES.home} style={{ textDecoration: 'none' }}>
             <Text
               size="xl"
               fw={700}
@@ -89,9 +87,9 @@ export function Header() {
           </Link>
 
           {/* Desktop Navigation */}
-          <Group gap="sm" visibleFrom="sm">
+          <Group gap="sm" visibleFrom="md">
             {/* Nav Links */}
-            <Link href="/products" style={{ textDecoration: 'none' }}>
+            <Link href={ROUTES.products.list} style={{ textDecoration: 'none' }}>
               <motion.div whileHover={{ y: -2 }} transition={{ duration: 0.2 }}>
                 <Text
                   size="sm"
@@ -136,7 +134,7 @@ export function Header() {
             </motion.button>
 
             {/* Cart */}
-            <Link href="/cart" style={{ textDecoration: 'none' }}>
+            <Link href={ROUTES.cart} style={{ textDecoration: 'none' }}>
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -247,13 +245,13 @@ export function Header() {
                   <Menu.Label>Mi cuenta</Menu.Label>
                   <Menu.Item
                     leftSection={<IconUser size={16} />}
-                    onClick={() => router.push('/profile')}
+                    onClick={() => router.push(ROUTES.profile)}
                   >
                     Mi perfil
                   </Menu.Item>
                   <Menu.Item
                     leftSection={<IconPackage size={16} />}
-                    onClick={() => router.push('/orders')}
+                    onClick={() => router.push(ROUTES.orders.list)}
                   >
                     Mis pedidos
                   </Menu.Item>
@@ -264,7 +262,7 @@ export function Header() {
                       <Menu.Label>Administración</Menu.Label>
                       <Menu.Item
                         leftSection={<IconSettings size={16} />}
-                        onClick={() => router.push('/admin')}
+                        onClick={() => router.push(ROUTES.admin.dashboard)}
                       >
                         Panel Admin
                       </Menu.Item>
@@ -283,7 +281,7 @@ export function Header() {
               </Menu>
             ) : (
               <Group gap="sm">
-                <Link href="/login" style={{ textDecoration: 'none' }}>
+                <Link href={ROUTES.auth.login} style={{ textDecoration: 'none' }}>
                   <Text
                     size="sm"
                     fw={500}
@@ -302,7 +300,7 @@ export function Header() {
                     Iniciar sesión
                   </Text>
                 </Link>
-                <Link href="/register" style={{ textDecoration: 'none' }}>
+                <Link href={ROUTES.auth.register} style={{ textDecoration: 'none' }}>
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -329,7 +327,7 @@ export function Header() {
           <Burger
             opened={drawerOpened}
             onClick={toggleDrawer}
-            hiddenFrom="sm"
+            hiddenFrom="md"
             color="white"
           />
         </Group>
@@ -376,7 +374,7 @@ export function Header() {
             {storeName}
           </Text>
         }
-        hiddenFrom="sm"
+        hiddenFrom="md"
         zIndex={1000}
         styles={{
           content: {
@@ -404,7 +402,7 @@ export function Header() {
           />
 
           <Link
-            href="/products"
+            href={ROUTES.products.list}
             onClick={closeDrawer}
             style={{ textDecoration: 'none' }}
           >
@@ -421,7 +419,7 @@ export function Header() {
           </Link>
 
           <Link
-            href="/cart"
+            href={ROUTES.cart}
             onClick={closeDrawer}
             style={{ textDecoration: 'none' }}
           >
@@ -446,7 +444,7 @@ export function Header() {
           {isAuthenticated ? (
             <>
               <Link
-                href="/profile"
+                href={ROUTES.profile}
                 onClick={closeDrawer}
                 style={{ textDecoration: 'none' }}
               >
@@ -467,7 +465,7 @@ export function Header() {
               </Link>
 
               <Link
-                href="/orders"
+                href={ROUTES.orders.list}
                 onClick={closeDrawer}
                 style={{ textDecoration: 'none' }}
               >
@@ -491,7 +489,7 @@ export function Header() {
                 <>
                   <Divider color="rgba(255, 255, 255, 0.1)" />
                   <Link
-                    href="/admin"
+                    href={ROUTES.admin.dashboard}
                     onClick={closeDrawer}
                     style={{ textDecoration: 'none' }}
                   >
@@ -540,7 +538,7 @@ export function Header() {
           ) : (
             <>
               <Link
-                href="/login"
+                href={ROUTES.auth.login}
                 onClick={closeDrawer}
                 style={{ textDecoration: 'none' }}
               >
@@ -558,7 +556,7 @@ export function Header() {
               </Link>
 
               <Link
-                href="/register"
+                href={ROUTES.auth.register}
                 onClick={closeDrawer}
                 style={{ textDecoration: 'none' }}
               >
@@ -579,6 +577,6 @@ export function Header() {
           )}
         </Stack>
       </Drawer>
-    </header>
+    </div>
   );
 }

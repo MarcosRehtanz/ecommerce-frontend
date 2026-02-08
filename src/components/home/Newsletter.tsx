@@ -5,12 +5,28 @@ import { Box, Container, Title, Text } from '@mantine/core';
 import { motion, AnimatePresence } from 'framer-motion';
 import { IconSparkles, IconCheck, IconArrowRight } from '@tabler/icons-react';
 import { useNewsletterSubscribe } from '@/hooks/useNewsletter';
+import { NewsletterConfig } from '@/types';
 
-export function Newsletter() {
+interface NewsletterProps {
+  config?: NewsletterConfig;
+}
+
+export function Newsletter({ config: newsletterConfig }: NewsletterProps) {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const { mutate: subscribe, isPending } = useNewsletterSubscribe();
+
+  if (newsletterConfig?.isVisible === false) return null;
+
+  const badge = newsletterConfig?.badge || 'EXCLUSIVO PARA MIEMBROS';
+  const title = newsletterConfig?.title || 'Únete al Círculo Interior';
+  const description = newsletterConfig?.description || 'Recibe acceso anticipado a nuevos lanzamientos, ofertas exclusivas y un **10% de descuento** en tu primera compra.';
+  const buttonText = newsletterConfig?.buttonText || 'Unirme';
+  const successTitle = newsletterConfig?.successTitle || '¡Bienvenido al círculo!';
+  const successMessage = newsletterConfig?.successMessage || 'Revisa tu correo para confirmar tu suscripción.';
+  const trustText = newsletterConfig?.trustText || 'Sin spam. Cancela cuando quieras.';
+  const benefits = newsletterConfig?.benefits || ['10% en primera compra', 'Acceso anticipado', 'Ofertas exclusivas'];
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,6 +41,20 @@ export function Newsletter() {
           setEmail('');
         },
       }
+    );
+  };
+
+  // Parse markdown bold from description
+  const renderDescription = (text: string) => {
+    const parts = text.split(/\*\*(.*?)\*\*/);
+    return parts.map((part, i) =>
+      i % 2 === 1 ? (
+        <Text key={i} component="span" fw={700} c="white">
+          {part}
+        </Text>
+      ) : (
+        part
+      )
     );
   };
 
@@ -125,7 +155,7 @@ export function Newsletter() {
             >
               <IconSparkles size={16} color="white" />
               <Text size="sm" fw={600} c="white">
-                EXCLUSIVO PARA MIEMBROS
+                {badge}
               </Text>
             </Box>
           </motion.div>
@@ -146,7 +176,7 @@ export function Newsletter() {
               mb="md"
               style={{ fontFamily: 'var(--font-display)' }}
             >
-              Únete al Círculo Interior
+              {title}
             </Title>
           </motion.div>
 
@@ -158,12 +188,7 @@ export function Newsletter() {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <Text c="white" opacity={0.85} size="lg" mb="xl" maw={500} mx="auto">
-              Recibe acceso anticipado a nuevos lanzamientos, ofertas exclusivas
-              y un{' '}
-              <Text component="span" fw={700} c="white">
-                10% de descuento
-              </Text>{' '}
-              en tu primera compra.
+              {renderDescription(description)}
             </Text>
           </motion.div>
 
@@ -198,10 +223,10 @@ export function Newsletter() {
                     <IconCheck size={32} color="white" />
                   </Box>
                   <Text c="white" fw={600} size="lg">
-                    ¡Bienvenido al círculo!
+                    {successTitle}
                   </Text>
                   <Text c="white" opacity={0.8} size="sm">
-                    Revisa tu correo para confirmar tu suscripción.
+                    {successMessage}
                   </Text>
                 </motion.div>
               ) : (
@@ -232,8 +257,8 @@ export function Newsletter() {
                           : '0 0 0 0px rgba(255, 255, 255, 0)',
                       }}
                       style={{
-                        flex: '1 1 280px',
-                        minWidth: 280,
+                        flex: '1 1 240px',
+                        minWidth: 0,
                         borderRadius: 100,
                       }}
                     >
@@ -291,7 +316,7 @@ export function Newsletter() {
                         />
                       ) : (
                         <>
-                          Unirme
+                          {buttonText}
                           <IconArrowRight size={18} />
                         </>
                       )}
@@ -311,7 +336,7 @@ export function Newsletter() {
               transition={{ duration: 0.5, delay: 0.4 }}
             >
               <Text c="white" opacity={0.5} size="sm" mt="xl">
-                Sin spam. Cancela cuando quieras.
+                {trustText}
               </Text>
             </motion.div>
           )}
@@ -330,11 +355,7 @@ export function Newsletter() {
               flexWrap: 'wrap',
             }}
           >
-            {[
-              '10% en primera compra',
-              'Acceso anticipado',
-              'Ofertas exclusivas',
-            ].map((benefit, index) => (
+            {benefits.map((benefit, index) => (
               <Box
                 key={index}
                 style={{

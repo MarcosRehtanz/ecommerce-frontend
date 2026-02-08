@@ -2,9 +2,13 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Project Ownership
+
+This project belongs to **Kheiron Company SAS**. The brand name "Dynnamo" is NOT used — the store name is configurable via admin (site-config `general.storeName`). All hardcoded fallbacks must use "Mi Tienda", never "Dynnamo".
+
 ## Project Overview
 
-Dynnamo is a B2C e-commerce frontend built with Next.js 14 (App Router), Mantine v7, Zustand, and TanStack Query. It connects to a NestJS backend API.
+B2C e-commerce platform by Kheiron Company SAS, built with Next.js 14 (App Router), Mantine v7, Zustand, and TanStack Query. It connects to a NestJS backend API.
 
 ## Commands
 

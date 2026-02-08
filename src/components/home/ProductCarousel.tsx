@@ -16,6 +16,7 @@ import { IconArrowRight, IconShoppingCart, IconHeart } from '@tabler/icons-react
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { getProductImageSrc } from '@/utils/image';
 import { Product } from '@/types';
+import { ROUTES, productDetailRoute } from '@/lib/routes';
 
 interface ProductCarouselProps {
   title: string;
@@ -94,7 +95,7 @@ function GlassProductCard({ product }: { product: Product }) {
       >
         {/* Image Container */}
         <Link
-          href={`/products/${product.id}`}
+          href={productDetailRoute(product.id)}
           style={{ textDecoration: 'none', display: 'block' }}
         >
           <Box pos="relative" style={{ aspectRatio: '1', overflow: 'hidden' }}>
@@ -210,7 +211,7 @@ function GlassProductCard({ product }: { product: Product }) {
         {/* Content */}
         <Box p="md" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <Link
-            href={`/products/${product.id}`}
+            href={productDetailRoute(product.id)}
             style={{ textDecoration: 'none' }}
           >
             <Text
@@ -304,7 +305,7 @@ function GlassProductCard({ product }: { product: Product }) {
 export function ProductCarousel({
   title,
   subtitle,
-  viewAllLink = '/products',
+  viewAllLink = ROUTES.products.list,
   initialProducts = [],
 }: ProductCarouselProps) {
   const products = initialProducts;

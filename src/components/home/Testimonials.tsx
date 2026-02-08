@@ -3,8 +3,9 @@
 import { Box, Container, Title, Text } from '@mantine/core';
 import { motion } from 'framer-motion';
 import { IconQuote, IconStarFilled, IconCheck } from '@tabler/icons-react';
+import { TestimonialsConfig } from '@/types';
 
-const testimonials = [
+const DEFAULT_TESTIMONIALS = [
   {
     name: 'María García',
     rating: 5,
@@ -24,6 +25,12 @@ const testimonials = [
     product: 'Bolso Signature',
   },
 ];
+
+const DEFAULT_METRICS = {
+  averageRating: '4.9',
+  totalCustomers: '10K+',
+  recommendRate: '98%',
+};
 
 function getInitials(name: string): string {
   return name
@@ -60,6 +67,13 @@ const cardVariants = {
   },
 };
 
+interface TestimonialItem {
+  name: string;
+  rating: number;
+  text: string;
+  product: string;
+}
+
 interface StarRatingProps {
   rating: number;
   maxRating?: number;
@@ -85,7 +99,7 @@ function StarRating({ rating, maxRating = 5 }: StarRatingProps) {
 }
 
 interface TestimonialCardProps {
-  testimonial: (typeof testimonials)[0];
+  testimonial: TestimonialItem;
   index: number;
 }
 
@@ -233,7 +247,29 @@ function TestimonialCard({ testimonial, index }: TestimonialCardProps) {
   );
 }
 
-export function Testimonials() {
+interface TestimonialsProps {
+  config?: TestimonialsConfig;
+}
+
+export function Testimonials({ config: testimonialsConfig }: TestimonialsProps) {
+
+  if (testimonialsConfig?.isVisible === false) return null;
+
+  // Content fields — only show if explicitly configured (no fake testimonials)
+  const items = testimonialsConfig?.items;
+  if (!items || items.length === 0) return null;
+
+  // Structural defaults (safe to show)
+  const sectionLabel = testimonialsConfig?.sectionLabel || 'Testimonios';
+  const title = testimonialsConfig?.title || 'Lo Que Dicen Nuestros Clientes';
+  const subtitle = testimonialsConfig?.subtitle || '+10,000 clientes satisfechos nos respaldan';
+
+  // Metrics — only show if configured
+  const metrics = testimonialsConfig?.metrics;
+  const averageRatingLabel = metrics?.averageRatingLabel || 'Calificación promedio';
+  const totalCustomersLabel = metrics?.totalCustomersLabel || 'Clientes felices';
+  const recommendRateLabel = metrics?.recommendRateLabel || 'Recomendarían';
+
   return (
     <Box
       py={{ base: 60, md: 80 }}
@@ -258,7 +294,7 @@ export function Testimonials() {
               letterSpacing: 2,
             }}
           >
-            Testimonios
+            {sectionLabel}
           </Text>
           <Title
             order={2}
@@ -267,10 +303,10 @@ export function Testimonials() {
             mb="sm"
             style={{ fontFamily: 'var(--font-display)' }}
           >
-            Lo Que Dicen Nuestros Clientes
+            {title}
           </Title>
           <Text c="white" opacity={0.5} size="lg">
-            +10,000 clientes satisfechos nos respaldan
+            {subtitle}
           </Text>
         </motion.div>
 
@@ -282,11 +318,11 @@ export function Testimonials() {
           viewport={{ once: true, margin: '-100px' }}
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))',
             gap: 24,
           }}
         >
-          {testimonials.map((testimonial, index) => (
+          {items.map((testimonial, index) => (
             <TestimonialCard
               key={index}
               testimonial={testimonial}
@@ -295,93 +331,95 @@ export function Testimonials() {
           ))}
         </motion.div>
 
-        {/* Trust Metrics */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: 48,
-            marginTop: 64,
-            flexWrap: 'wrap',
-          }}
-        >
-          <Box ta="center">
-            <Text
-              c="white"
-              fz={36}
-              fw={700}
-              lh={1}
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              4.9
-            </Text>
-            <Box
-              mt="xs"
-              style={{ display: 'flex', justifyContent: 'center', gap: 2 }}
-            >
-              {[...Array(5)].map((_, i) => (
-                <IconStarFilled
-                  key={i}
-                  size={14}
-                  style={{ color: 'var(--jade-mint, #10B981)' }}
-                />
-              ))}
+        {/* Trust Metrics — only if configured */}
+        {metrics && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              gap: 48,
+              marginTop: 64,
+              flexWrap: 'wrap',
+            }}
+          >
+            <Box ta="center">
+              <Text
+                c="white"
+                fz={36}
+                fw={700}
+                lh={1}
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {metrics.averageRating}
+              </Text>
+              <Box
+                mt="xs"
+                style={{ display: 'flex', justifyContent: 'center', gap: 2 }}
+              >
+                {[...Array(5)].map((_, i) => (
+                  <IconStarFilled
+                    key={i}
+                    size={14}
+                    style={{ color: 'var(--jade-mint, #10B981)' }}
+                  />
+                ))}
+              </Box>
+              <Text c="white" size="sm" opacity={0.5} mt="xs">
+                {averageRatingLabel}
+              </Text>
             </Box>
-            <Text c="white" size="sm" opacity={0.5} mt="xs">
-              Calificación promedio
-            </Text>
-          </Box>
 
-          <Box
-            style={{
-              width: 1,
-              background: 'rgba(255, 255, 255, 0.1)',
-              alignSelf: 'stretch',
-            }}
-          />
+            <Box
+              style={{
+                width: 1,
+                background: 'rgba(255, 255, 255, 0.1)',
+                alignSelf: 'stretch',
+              }}
+            />
 
-          <Box ta="center">
-            <Text
-              c="white"
-              fz={36}
-              fw={700}
-              lh={1}
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              10K+
-            </Text>
-            <Text c="white" size="sm" opacity={0.5} mt="sm">
-              Clientes felices
-            </Text>
-          </Box>
+            <Box ta="center">
+              <Text
+                c="white"
+                fz={36}
+                fw={700}
+                lh={1}
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {metrics.totalCustomers}
+              </Text>
+              <Text c="white" size="sm" opacity={0.5} mt="sm">
+                {totalCustomersLabel}
+              </Text>
+            </Box>
 
-          <Box
-            style={{
-              width: 1,
-              background: 'rgba(255, 255, 255, 0.1)',
-              alignSelf: 'stretch',
-            }}
-          />
+            <Box
+              style={{
+                width: 1,
+                background: 'rgba(255, 255, 255, 0.1)',
+                alignSelf: 'stretch',
+              }}
+            />
 
-          <Box ta="center">
-            <Text
-              c="white"
-              fz={36}
-              fw={700}
-              lh={1}
-              style={{ fontFamily: 'var(--font-display)' }}
-            >
-              98%
-            </Text>
-            <Text c="white" size="sm" opacity={0.5} mt="sm">
-              Recomendarían
-            </Text>
-          </Box>
-        </motion.div>
+            <Box ta="center">
+              <Text
+                c="white"
+                fz={36}
+                fw={700}
+                lh={1}
+                style={{ fontFamily: 'var(--font-display)' }}
+              >
+                {metrics.recommendRate}
+              </Text>
+              <Text c="white" size="sm" opacity={0.5} mt="sm">
+                {recommendRateLabel}
+              </Text>
+            </Box>
+          </motion.div>
+        )}
       </Container>
     </Box>
   );

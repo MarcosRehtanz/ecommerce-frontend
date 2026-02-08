@@ -20,29 +20,30 @@ import {
   IconClock,
 } from '@tabler/icons-react';
 import { useHomepageConfig } from '@/hooks/useSiteConfig';
+import { ROUTES, productsSortNewestRoute, productsFeaturedRoute } from '@/lib/routes';
 
 const shopLinks = [
-  { label: 'Todos los productos', href: '/products' },
-  { label: 'Novedades', href: '/products?sortBy=createdAt&sortOrder=desc' },
-  { label: 'Los más populares', href: '/products?featured=true' },
+  { label: 'Todos los productos', href: ROUTES.products.list },
+  { label: 'Novedades', href: productsSortNewestRoute() },
+  { label: 'Los más populares', href: productsFeaturedRoute() },
 ];
 
 const accountLinks = [
-  { label: 'Iniciar sesión', href: '/login' },
-  { label: 'Crear cuenta', href: '/register' },
-  { label: 'Mis pedidos', href: '/orders' },
-  { label: 'Mi carrito', href: '/cart' },
+  { label: 'Iniciar sesión', href: ROUTES.auth.login },
+  { label: 'Crear cuenta', href: ROUTES.auth.register },
+  { label: 'Mis pedidos', href: ROUTES.orders.list },
+  { label: 'Mi carrito', href: ROUTES.cart },
 ];
 
 const contactInfo = [
-  { icon: IconMail, text: 'hola@dynnamo.com' },
+  { icon: IconMail, text: 'hola@kheiron.com' },
   { icon: IconMapPin, text: 'Santiago, Chile' },
   { icon: IconClock, text: 'Lun - Vie: 9:00 - 18:00' },
 ];
 
 export function Footer() {
   const { data: config } = useHomepageConfig();
-  const storeName = config?.general?.storeName || 'Dynnamo';
+  const storeName = config?.general?.storeName || 'Mi Tienda';
   const storeDescription =
     config?.general?.storeDescription ||
     'Tu destino premium para productos exclusivos. Calidad excepcional, estilo único.';
@@ -61,6 +62,7 @@ export function Footer() {
         position: 'relative',
         backgroundColor: 'var(--deep-ink)',
         marginTop: 'auto',
+        overflow: 'hidden',
       }}
     >
       {/* Neon border top */}
@@ -92,8 +94,8 @@ export function Footer() {
         }}
       />
 
-      <Container size="xl" py={{ base: 60, md: 80 }} pos="relative">
-        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing={{ base: 40, md: 'xl' }}>
+      <Container size="xl" py={{ base: 36, md: 48 }} pos="relative">
+        <SimpleGrid cols={{ base: 1, sm: 2, md: 4 }} spacing={{ base: 28, md: 'xl' }}>
           {/* Brand Column */}
           <Stack gap="lg">
             <motion.div
@@ -312,7 +314,7 @@ export function Footer() {
 
         {/* Divider */}
         <Box
-          my={{ base: 40, md: 48 }}
+          my={{ base: 24, md: 32 }}
           h={1}
           style={{
             background:

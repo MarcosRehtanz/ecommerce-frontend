@@ -26,6 +26,7 @@ import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { useCreateOrder } from '@/hooks/useOrders';
 import { useCreatePreference } from '@/hooks/usePayments';
 import { useAuthStore } from '@/stores/authStore';
+import { ROUTES, loginWithRedirectRoute } from '@/lib/routes';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -41,7 +42,7 @@ export default function CheckoutPage() {
 
   const handlePayWithMercadoPago = async () => {
     if (!isAuthenticated) {
-      router.push('/login?redirect=/checkout');
+      router.push(loginWithRedirectRoute(ROUTES.checkout.index));
       return;
     }
 
@@ -98,10 +99,10 @@ export default function CheckoutPage() {
             Necesitas iniciar sesion para completar tu compra
           </Text>
           <Group>
-            <Button component={Link} href="/login?redirect=/checkout" size="lg">
+            <Button component={Link} href={loginWithRedirectRoute(ROUTES.checkout.index)} size="lg">
               Iniciar sesion
             </Button>
-            <Button component={Link} href="/register" variant="outline" size="lg">
+            <Button component={Link} href={ROUTES.auth.register} variant="outline" size="lg">
               Registrarse
             </Button>
           </Group>
@@ -119,7 +120,7 @@ export default function CheckoutPage() {
           <Text c="dimmed">
             Agrega productos a tu carrito antes de continuar
           </Text>
-          <Button component={Link} href="/products" size="lg">
+          <Button component={Link} href={ROUTES.products.list} size="lg">
             Ver Productos
           </Button>
         </Stack>
@@ -291,7 +292,7 @@ export default function CheckoutPage() {
 
             <Button
               component={Link}
-              href="/cart"
+              href={ROUTES.cart}
               variant="subtle"
               fullWidth
               disabled={isLoading}

@@ -28,14 +28,15 @@ import {
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useAuthStore } from '@/stores/authStore';
+import { ROUTES } from '@/lib/routes';
 
 const navItems = [
-  { label: 'Dashboard', icon: IconDashboard, href: '/admin' },
-  { label: 'Productos', icon: IconPackage, href: '/admin/products' },
-  { label: 'Categorías', icon: IconCategory, href: '/admin/categories' },
-  { label: 'Pedidos', icon: IconShoppingCart, href: '/admin/orders' },
-  { label: 'Usuarios', icon: IconUsers, href: '/admin/users' },
-  { label: 'Configuración', icon: IconSettings, href: '/admin/site-config' },
+  { label: 'Dashboard', icon: IconDashboard, href: ROUTES.admin.dashboard },
+  { label: 'Productos', icon: IconPackage, href: ROUTES.admin.products },
+  { label: 'Categorías', icon: IconCategory, href: ROUTES.admin.categories },
+  { label: 'Pedidos', icon: IconShoppingCart, href: ROUTES.admin.orders },
+  { label: 'Usuarios', icon: IconUsers, href: ROUTES.admin.users },
+  { label: 'Configuración', icon: IconSettings, href: ROUTES.admin.siteConfig },
 ];
 
 export default function AdminLayout({
@@ -51,11 +52,11 @@ export default function AdminLayout({
   useEffect(() => {
     if (!_hasHydrated) return;
     if (!isAuthenticated) {
-      router.push('/login');
+      router.push(ROUTES.auth.login);
       return;
     }
     if (user?.role !== 'ADMIN') {
-      router.push('/');
+      router.push(ROUTES.home);
     }
   }, [_hasHydrated, isAuthenticated, user, router]);
 
@@ -126,8 +127,8 @@ export default function AdminLayout({
                 label={item.label}
                 leftSection={<item.icon size={20} />}
                 active={
-                  item.href === '/admin'
-                    ? pathname === '/admin'
+                  item.href === ROUTES.admin.dashboard
+                    ? pathname === ROUTES.admin.dashboard
                     : pathname.startsWith(item.href)
                 }
               />
@@ -139,7 +140,7 @@ export default function AdminLayout({
           {/* Back to store */}
           <NavLink
             component={Link}
-            href="/"
+            href={ROUTES.home}
             label="Volver a la tienda"
             leftSection={<IconArrowLeft size={20} />}
           />

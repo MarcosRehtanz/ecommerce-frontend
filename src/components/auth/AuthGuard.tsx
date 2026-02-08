@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Center, Loader } from '@mantine/core';
 import { useAuthStore } from '@/stores/authStore';
+import { ROUTES } from '@/lib/routes';
 
 interface AuthGuardProps {
   children: React.ReactNode;
@@ -19,12 +20,12 @@ export function AuthGuard({ children, requireAdmin = false }: AuthGuardProps) {
     if (!_hasHydrated) return;
 
     if (!isAuthenticated) {
-      router.push('/login');
+      router.push(ROUTES.auth.login);
       return;
     }
 
     if (requireAdmin && user?.role !== 'ADMIN') {
-      router.push('/');
+      router.push(ROUTES.home);
       return;
     }
   }, [isAuthenticated, user, requireAdmin, router, _hasHydrated]);

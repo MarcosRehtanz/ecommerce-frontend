@@ -34,6 +34,7 @@ import {
 import Link from 'next/link';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { useMyOrder, useCancelOrder } from '@/hooks/useOrders';
+import { ROUTES } from '@/lib/routes';
 import { useCreatePreference } from '@/hooks/usePayments';
 import { OrderStatus, PaymentStatus } from '@/lib/api/orders';
 import { getProductImageSrc } from '@/utils/image';
@@ -117,7 +118,7 @@ export default function OrderDetailPage({ params }: PageProps) {
       cancelOrderMutation.mutate(order.id, {
         onSuccess: () => {
           closeCancel();
-          router.push('/orders');
+          router.push(ROUTES.orders.list);
         },
       });
     }
@@ -144,7 +145,7 @@ export default function OrderDetailPage({ params }: PageProps) {
           <Text c="dimmed">
             No pudimos encontrar el pedido que buscas
           </Text>
-          <Button component={Link} href="/orders" size="lg">
+          <Button component={Link} href={ROUTES.orders.list} size="lg">
             Ver mis pedidos
           </Button>
         </Stack>
@@ -174,7 +175,7 @@ export default function OrderDetailPage({ params }: PageProps) {
         <div>
           <Button
             component={Link}
-            href="/orders"
+            href={ROUTES.orders.list}
             variant="subtle"
             leftSection={<IconArrowLeft size={16} />}
             mb="sm"
@@ -379,7 +380,7 @@ export default function OrderDetailPage({ params }: PageProps) {
 
             <Button
               component={Link}
-              href="/products"
+              href={ROUTES.products.list}
               variant="light"
               fullWidth
               mt="xs"

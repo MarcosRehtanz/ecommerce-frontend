@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { notifications } from '@mantine/notifications';
 import { authApi, LoginDto, RegisterDto } from '@/lib/api/auth';
 import { useAuthStore } from '@/stores/authStore';
+import { ROUTES } from '@/lib/routes';
 
 export const authKeys = {
   all: ['auth'] as const,
@@ -24,7 +25,7 @@ export function useLogin() {
         message: `Hola, ${data.user.name}!`,
         color: 'green',
       });
-      router.push('/');
+      router.push(ROUTES.home);
     },
     onError: (error: Error) => {
       notifications.show({
@@ -49,7 +50,7 @@ export function useRegister() {
         message: 'Tu cuenta ha sido creada exitosamente',
         color: 'green',
       });
-      router.push('/');
+      router.push(ROUTES.home);
     },
     onError: (error: Error) => {
       notifications.show({
@@ -76,13 +77,13 @@ export function useLogout() {
         message: 'Has cerrado sesión correctamente',
         color: 'blue',
       });
-      router.push('/');
+      router.push(ROUTES.home);
     },
     onError: () => {
       // Even if the API call fails, logout locally
       logout();
       queryClient.clear();
-      router.push('/');
+      router.push(ROUTES.home);
     },
   });
 }

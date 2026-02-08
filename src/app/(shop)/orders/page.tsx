@@ -33,6 +33,7 @@ import {
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useMyOrders, useCancelOrder } from '@/hooks/useOrders';
+import { ROUTES, orderDetailRoute } from '@/lib/routes';
 import { useCreatePaymentPreference } from '@/hooks/usePayments';
 import { Order, OrderStatus, PaymentStatus } from '@/lib/api/orders';
 
@@ -101,7 +102,9 @@ export default function OrdersPage() {
     );
   }
 
-  if (!data || data.data.length === 0) {
+  const hasNoOrders = (!data || data.data.length === 0) && !statusFilter;
+
+  if (hasNoOrders) {
     return (
       <Container size="md" py="xl">
         <Stack align="center" gap="lg" mt={50}>
@@ -110,13 +113,16 @@ export default function OrdersPage() {
           <Text c="dimmed">
             Cuando realices una compra, tus pedidos aparecerán aquí
           </Text>
-          <Button component={Link} href="/products" size="lg">
+          <Button component={Link} href={ROUTES.products.list} size="lg">
             Ver Productos
           </Button>
         </Stack>
       </Container>
     );
   }
+
+  const orders = data?.data ?? [];
+  const filterLabel = statusFilter ? statusConfig[statusFilter as OrderStatus]?.label : null;
 
   return (
     <Container size="lg" py="xl">
@@ -153,8 +159,26 @@ export default function OrdersPage() {
         </Group>
       </Group>
 
+      {orders.length === 0 ? (
+        <Stack align="center" gap="md" py={50}>
+          <IconPackage size={60} color="gray" />
+          <Text c="dimmed" ta="center">
+            No hay pedidos con estado <strong>{filterLabel}</strong>
+          </Text>
+          <Button
+            variant="light"
+            size="sm"
+            onClick={() => {
+              setStatusFilter(null);
+              setPage(1);
+            }}
+          >
+            Limpiar filtro
+          </Button>
+        </Stack>
+      ) : (
       <Stack gap="xs">
-        {data.data.map((order) => {
+        {orders.map((order) => {
           const status = statusConfig[order.status];
           const payment = paymentConfig[order.paymentStatus];
           const canPay = order.status === 'PENDING' && order.paymentStatus === 'PENDING';
@@ -240,7 +264,7 @@ export default function OrdersPage() {
                   )}
                   <Button
                     component={Link}
-                    href={`/orders/${order.id}`}
+                    href={orderDetailRoute(order.id)}
                     size="xs"
                     variant="light"
                     leftSection={<IconEye size={14} />}
@@ -253,8 +277,9 @@ export default function OrdersPage() {
           );
         })}
       </Stack>
+      )}
 
-      {data.meta.totalPages > 1 && (
+      {data && data.meta.totalPages > 1 && (
         <Group justify="center" mt="xl">
           <Pagination
             value={page}

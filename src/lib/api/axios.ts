@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '@/stores/authStore';
+import { ROUTES, loginWithRedirectRoute } from '@/lib/routes';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
@@ -158,7 +159,7 @@ api.interceptors.response.use(
           // Refresh failed, logout user
           useAuthStore.getState().logout();
           if (typeof window !== 'undefined') {
-            window.location.href = '/login?session=expired';
+            window.location.href = `${ROUTES.auth.login}?session=expired`;
           }
 
           const sessionError = new Error('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
@@ -170,7 +171,7 @@ api.interceptors.response.use(
         // No refresh token, logout
         useAuthStore.getState().logout();
         if (typeof window !== 'undefined') {
-          window.location.href = '/login';
+          window.location.href = ROUTES.auth.login;
         }
       }
     }

@@ -25,6 +25,7 @@ import { useProduct } from '@/hooks/useProducts';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { getProductImageSrc } from '@/utils/image';
 import { Product } from '@/types';
+import { ROUTES, productsByCategoryRoute } from '@/lib/routes';
 
 interface ProductDetailClientProps {
   initialProduct: Product | null;
@@ -74,7 +75,7 @@ export default function ProductDetailClient({ initialProduct }: ProductDetailCli
       <Container size="xl" py="xl">
         <Stack align="center" gap="md">
           <Text size="xl" c="dimmed">Producto no encontrado</Text>
-          <Button component={Link} href="/products" leftSection={<IconArrowLeft size={16} />}>
+          <Button component={Link} href={ROUTES.products.list} leftSection={<IconArrowLeft size={16} />}>
             Volver a productos
           </Button>
         </Stack>
@@ -91,10 +92,10 @@ export default function ProductDetailClient({ initialProduct }: ProductDetailCli
     <Container size="xl" py="xl">
       <Stack gap="lg">
         <Breadcrumbs>
-          <Anchor component={Link} href="/">Inicio</Anchor>
-          <Anchor component={Link} href="/products">Productos</Anchor>
+          <Anchor component={Link} href={ROUTES.home}>Inicio</Anchor>
+          <Anchor component={Link} href={ROUTES.products.list}>Productos</Anchor>
           {product.category && (
-            <Anchor component={Link} href={`/products?category=${product.category.slug}`}>
+            <Anchor component={Link} href={productsByCategoryRoute(product.category.slug)}>
               {product.category.name}
             </Anchor>
           )}

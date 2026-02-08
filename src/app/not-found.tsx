@@ -1,5 +1,6 @@
 import { Container, Title, Text, Button, Stack } from '@mantine/core';
 import Link from 'next/link';
+import { ROUTES } from '@/lib/routes';
 
 export default function NotFound() {
   return (
@@ -9,7 +10,7 @@ export default function NotFound() {
         <Text size="xl" c="dimmed">
           Página no encontrada
         </Text>
-        <Button component={Link} href="/">
+        <Button component={Link} href={ROUTES.home}>
           Volver al inicio
         </Button>
       </Stack>

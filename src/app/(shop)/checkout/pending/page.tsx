@@ -17,6 +17,7 @@ import Link from 'next/link';
 import { usePaymentStatus } from '@/hooks/usePayments';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { ROUTES, orderDetailRoute, checkoutSuccessRoute, checkoutFailureRoute } from '@/lib/routes';
 
 export default function CheckoutPendingPage() {
   const searchParams = useSearchParams();
@@ -28,9 +29,9 @@ export default function CheckoutPendingPage() {
   // Redirect to success if payment is approved
   useEffect(() => {
     if (paymentStatus?.paymentStatus === 'APPROVED') {
-      router.push(`/checkout/success?order_id=${orderId}`);
+      router.push(checkoutSuccessRoute(orderId!));
     } else if (paymentStatus?.paymentStatus === 'REJECTED') {
-      router.push(`/checkout/failure?order_id=${orderId}`);
+      router.push(checkoutFailureRoute(orderId!));
     }
   }, [paymentStatus, orderId, router]);
 
@@ -91,7 +92,7 @@ export default function CheckoutPendingPage() {
             {orderId && (
               <Button
                 component={Link}
-                href={`/orders/${orderId}`}
+                href={orderDetailRoute(orderId)}
                 size="lg"
                 leftSection={<IconReceipt size={20} />}
               >
@@ -100,7 +101,7 @@ export default function CheckoutPendingPage() {
             )}
             <Button
               component={Link}
-              href="/products"
+              href={ROUTES.products.list}
               variant="outline"
               size="lg"
               leftSection={<IconShoppingBag size={20} />}

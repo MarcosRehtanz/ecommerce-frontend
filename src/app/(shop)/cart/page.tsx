@@ -20,6 +20,7 @@ import {
 import { IconTrash, IconShoppingCart } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useUnifiedCart } from '@/hooks/useUnifiedCart';
+import { ROUTES } from '@/lib/routes';
 
 export default function CartPage() {
   const {
@@ -52,7 +53,7 @@ export default function CartPage() {
           <Text c="dimmed">
             Agrega productos a tu carrito para continuar con la compra
           </Text>
-          <Button component={Link} href="/products" size="lg">
+          <Button component={Link} href={ROUTES.products.list} size="lg">
             Ver Productos
           </Button>
         </Stack>
@@ -154,7 +155,7 @@ export default function CartPage() {
 
               <Button
                 component={Link}
-                href="/checkout"
+                href={ROUTES.checkout.index}
                 size="lg"
                 fullWidth
                 mt="md"

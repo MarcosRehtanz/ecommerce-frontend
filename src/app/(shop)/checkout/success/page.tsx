@@ -18,6 +18,7 @@ import { IconCheck, IconShoppingBag, IconReceipt } from '@tabler/icons-react';
 import Link from 'next/link';
 import { useQueryClient } from '@tanstack/react-query';
 import { usePaymentStatus } from '@/hooks/usePayments';
+import { ROUTES, orderDetailRoute } from '@/lib/routes';
 
 export default function CheckoutSuccessPage() {
   const searchParams = useSearchParams();
@@ -50,7 +51,7 @@ export default function CheckoutSuccessPage() {
             <Text c="dimmed" ta="center">
               No se pudo encontrar la informacion de la orden.
             </Text>
-            <Button component={Link} href="/products" size="lg">
+            <Button component={Link} href={ROUTES.products.list} size="lg">
               Ver Productos
             </Button>
           </Stack>
@@ -116,7 +117,7 @@ export default function CheckoutSuccessPage() {
           <Group mt="md">
             <Button
               component={Link}
-              href={`/orders/${orderId}`}
+              href={orderDetailRoute(orderId)}
               size="lg"
               leftSection={<IconReceipt size={20} />}
             >
@@ -124,7 +125,7 @@ export default function CheckoutSuccessPage() {
             </Button>
             <Button
               component={Link}
-              href="/products"
+              href={ROUTES.products.list}
               variant="outline"
               size="lg"
               leftSection={<IconShoppingBag size={20} />}

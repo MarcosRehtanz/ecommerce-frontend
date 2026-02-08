@@ -17,6 +17,8 @@ export function MainLayout({ children, showTopBar = true }: MainLayoutProps) {
       styles={{
         main: {
           backgroundColor: 'var(--deep-ink)',
+          display: 'flex',
+          flexDirection: 'column',
           minHeight: '100vh',
         },
       }}
@@ -30,13 +32,7 @@ export function MainLayout({ children, showTopBar = true }: MainLayoutProps) {
         {showTopBar && <TopBar />}
         <Header />
       </AppShell.Header>
-      <AppShell.Main
-        style={{
-          minHeight: 'calc(100vh - 60px)',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-      >
+      <AppShell.Main>
         <div style={{ flex: 1 }}>{children}</div>
         <Footer />
       </AppShell.Main>

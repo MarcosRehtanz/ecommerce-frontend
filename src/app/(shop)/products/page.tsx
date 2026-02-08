@@ -31,6 +31,7 @@ import { useUnifiedCart } from '@/hooks/useUnifiedCart';
 import { useIntersectionObserver } from '@/hooks/useIntersectionObserver';
 import { Product } from '@/types';
 import { getProductImageSrc } from '@/utils/image';
+import { productDetailRoute } from '@/lib/routes';
 
 function ProductCard({ product, onAddToCart }: { product: Product; onAddToCart: () => void }) {
   const imageSrc = getProductImageSrc(product.imageData, product.imageUrl, 'https://placehold.co/300x200?text=Sin+imagen');
@@ -38,7 +39,7 @@ function ProductCard({ product, onAddToCart }: { product: Product; onAddToCart: 
 
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder h="100%">
-      <Card.Section component={Link} href={`/products/${product.id}`} pos="relative" style={{ height: 200 }}>
+      <Card.Section component={Link} href={productDetailRoute(product.id)} pos="relative" style={{ height: 200 }}>
         <Image
           src={imageSrc}
           alt={product.name}
@@ -53,7 +54,7 @@ function ProductCard({ product, onAddToCart }: { product: Product; onAddToCart: 
         <Group justify="space-between">
           <Text
             component={Link}
-            href={`/products/${product.id}`}
+            href={productDetailRoute(product.id)}
             fw={500}
             lineClamp={1}
             style={{ textDecoration: 'none', color: 'inherit' }}
@@ -172,64 +173,77 @@ export default function ProductsPage() {
         </Group>
 
         {/* Filters */}
-        <Paper shadow="xs" p="md" withBorder>
-          <Group align="flex-end" wrap="wrap" grow>
+        <Paper
+          shadow="xs"
+          p="md"
+          style={{
+            background: 'var(--glass-white)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            border: '1px solid var(--border-glass)',
+            borderRadius: 'var(--radius-xl)',
+          }}
+        >
+          <Stack gap="sm">
+            {/* Search row */}
             <TextInput
               placeholder="Buscar productos..."
               leftSection={<IconSearch size={16} />}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ minWidth: 180 }}
             />
-            <NumberInput
-              placeholder="Min"
-              label="Precio mínimo"
-              prefix="$"
-              min={0}
-              value={minPrice}
-              onChange={(value) => setMinPrice(value as number | '')}
-              style={{ minWidth: 100 }}
-            />
-            <NumberInput
-              placeholder="Max"
-              label="Precio máximo"
-              prefix="$"
-              min={0}
-              value={maxPrice}
-              onChange={(value) => setMaxPrice(value as number | '')}
-              style={{ minWidth: 100 }}
-            />
-            <Select
-              label="Categoría"
-              placeholder="Todas"
-              value={category}
-              onChange={setCategory}
-              data={categoriesData?.map((c) => ({ value: c.slug, label: c.name })) || []}
-              clearable
-              style={{ minWidth: 140 }}
-            />
-            <Select
-              label="Ordenar por"
-              value={sortBy}
-              onChange={setSortBy}
-              data={[
-                { value: 'createdAt', label: 'Más recientes' },
-                { value: 'name', label: 'Nombre' },
-                { value: 'price', label: 'Precio' },
-              ]}
-              style={{ minWidth: 130 }}
-            />
-            <Select
-              label="Orden"
-              value={sortOrder}
-              onChange={setSortOrder}
-              data={[
-                { value: 'asc', label: 'Ascendente' },
-                { value: 'desc', label: 'Descendente' },
-              ]}
-              style={{ minWidth: 110 }}
-            />
-          </Group>
+            {/* Filter row */}
+            <Group align="flex-end" wrap="wrap" grow>
+              <NumberInput
+                placeholder="Min"
+                label="Precio mín."
+                prefix="$"
+                min={0}
+                value={minPrice}
+                onChange={(value) => setMinPrice(value as number | '')}
+                style={{ minWidth: 90 }}
+              />
+              <NumberInput
+                placeholder="Max"
+                label="Precio máx."
+                prefix="$"
+                min={0}
+                value={maxPrice}
+                onChange={(value) => setMaxPrice(value as number | '')}
+                style={{ minWidth: 90 }}
+              />
+              <Select
+                label="Categoría"
+                placeholder="Todas"
+                value={category}
+                onChange={setCategory}
+                data={categoriesData?.map((c) => ({ value: c.slug, label: c.name })) || []}
+                clearable
+                style={{ minWidth: 130 }}
+              />
+              <Select
+                label="Ordenar por"
+                value={sortBy}
+                onChange={setSortBy}
+                data={[
+                  { value: 'createdAt', label: 'Más recientes' },
+                  { value: 'name', label: 'Nombre' },
+                  { value: 'price', label: 'Precio' },
+                ]}
+                style={{ minWidth: 120 }}
+              />
+              <Select
+                label="Orden"
+                value={sortOrder}
+                onChange={setSortOrder}
+                data={[
+                  { value: 'asc', label: 'Ascendente' },
+                  { value: 'desc', label: 'Descendente' },
+                ]}
+                style={{ minWidth: 100 }}
+              />
+            </Group>
+          </Stack>
         </Paper>
 
         {/* Products Grid */}

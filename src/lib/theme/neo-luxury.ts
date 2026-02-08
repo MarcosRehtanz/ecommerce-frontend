@@ -162,21 +162,25 @@ export const neoLuxuryTheme = createTheme({
       },
     },
 
-    // TextInput styling for dark theme
+    // === SHARED INPUT STYLES (Glass-Dark) ===
+    // All form inputs use the same glass-dark aesthetic
+
     TextInput: {
       defaultProps: {
         radius: 'md',
       },
       styles: () => ({
         label: {
-          color: 'var(--mantine-color-gray-3)',
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: 13,
+          marginBottom: 6,
         },
         input: {
-          backgroundColor: 'var(--mantine-color-dark-6)',
-          border: '1px solid var(--mantine-color-dark-4)',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           color: 'white',
           '&::placeholder': {
-            color: 'var(--mantine-color-gray-5)',
+            color: 'rgba(255, 255, 255, 0.4)',
           },
           '&:focus': {
             borderColor: 'var(--mantine-color-orchid-7)',
@@ -186,21 +190,22 @@ export const neoLuxuryTheme = createTheme({
       }),
     },
 
-    // PasswordInput styling for dark theme
     PasswordInput: {
       defaultProps: {
         radius: 'md',
       },
       styles: () => ({
         label: {
-          color: 'var(--mantine-color-gray-3)',
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: 13,
+          marginBottom: 6,
         },
         input: {
-          backgroundColor: 'var(--mantine-color-dark-6)',
-          border: '1px solid var(--mantine-color-dark-4)',
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
           color: 'white',
           '&::placeholder': {
-            color: 'var(--mantine-color-gray-5)',
+            color: 'rgba(255, 255, 255, 0.4)',
           },
           '&:focus': {
             borderColor: 'var(--mantine-color-orchid-7)',
@@ -209,6 +214,93 @@ export const neoLuxuryTheme = createTheme({
         },
         innerInput: {
           color: 'white',
+        },
+      }),
+    },
+
+    Select: {
+      defaultProps: {
+        radius: 'md',
+      },
+      styles: () => ({
+        label: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: 13,
+          marginBottom: 6,
+        },
+        input: {
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          '&::placeholder': {
+            color: 'rgba(255, 255, 255, 0.4)',
+          },
+          '&:focus': {
+            borderColor: 'var(--mantine-color-orchid-7)',
+            boxShadow: '0 0 0 2px rgba(124, 58, 237, 0.2)',
+          },
+        },
+        dropdown: {
+          backgroundColor: '#1e2538',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+        },
+        option: {
+          '&[data-combobox-selected]': {
+            backgroundColor: 'rgba(124, 58, 237, 0.2)',
+          },
+          '&[data-combobox-active]': {
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          },
+        },
+      }),
+    },
+
+    NumberInput: {
+      defaultProps: {
+        radius: 'md',
+      },
+      styles: () => ({
+        label: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: 13,
+          marginBottom: 6,
+        },
+        input: {
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          '&::placeholder': {
+            color: 'rgba(255, 255, 255, 0.4)',
+          },
+          '&:focus': {
+            borderColor: 'var(--mantine-color-orchid-7)',
+            boxShadow: '0 0 0 2px rgba(124, 58, 237, 0.2)',
+          },
+        },
+      }),
+    },
+
+    Textarea: {
+      defaultProps: {
+        radius: 'md',
+      },
+      styles: () => ({
+        label: {
+          color: 'rgba(255, 255, 255, 0.7)',
+          fontSize: 13,
+          marginBottom: 6,
+        },
+        input: {
+          backgroundColor: 'rgba(0, 0, 0, 0.2)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          color: 'white',
+          '&::placeholder': {
+            color: 'rgba(255, 255, 255, 0.4)',
+          },
+          '&:focus': {
+            borderColor: 'var(--mantine-color-orchid-7)',
+            boxShadow: '0 0 0 2px rgba(124, 58, 237, 0.2)',
+          },
         },
       }),
     },

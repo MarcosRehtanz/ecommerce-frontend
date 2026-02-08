@@ -13,6 +13,7 @@ import {
 } from '@mantine/core';
 import { IconX, IconShoppingCart, IconRefresh } from '@tabler/icons-react';
 import Link from 'next/link';
+import { ROUTES, orderDetailRoute } from '@/lib/routes';
 
 export default function CheckoutFailurePage() {
   const searchParams = useSearchParams();
@@ -60,7 +61,7 @@ export default function CheckoutFailurePage() {
             {orderId && (
               <Button
                 component={Link}
-                href={`/orders/${orderId}`}
+                href={orderDetailRoute(orderId)}
                 size="lg"
                 leftSection={<IconRefresh size={20} />}
               >
@@ -69,7 +70,7 @@ export default function CheckoutFailurePage() {
             )}
             <Button
               component={Link}
-              href="/products"
+              href={ROUTES.products.list}
               variant="outline"
               size="lg"
               leftSection={<IconShoppingCart size={20} />}
